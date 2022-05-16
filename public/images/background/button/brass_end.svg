@@ -1,0 +1,120 @@
+<svg id="Left" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="46" height="48" viewBox="0 0 46 48">
+  <defs>
+    <style>
+      .cls-1, .cls-10, .cls-11, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9 {
+        fill-rule: evenodd;
+      }
+
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: #b7802b;
+      }
+
+      .cls-3 {
+        fill: #d89f49;
+      }
+
+      .cls-10, .cls-11, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9 {
+        opacity: 0.5;
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-5 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-6 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-7 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-8 {
+        fill: url(#linear-gradient-6);
+      }
+
+      .cls-9 {
+        fill: url(#linear-gradient-7);
+      }
+
+      .cls-10 {
+        fill: url(#linear-gradient-8);
+      }
+
+      .cls-11 {
+        fill: url(#linear-gradient-9);
+      }
+
+      .cls-12 {
+        fill: #c69348;
+      }
+
+      .cls-13 {
+        fill: #956926;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="24" y1="47" x2="24" y2="1" gradientUnits="userSpaceOnUse">
+      <stop offset="0"/>
+      <stop offset="0.148" stop-color="#040e2f"/>
+      <stop offset="1"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="16" y1="48" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b7802b"/>
+      <stop offset="0.006" stop-color="#b7802b"/>
+      <stop offset="0.226" stop-color="#624312"/>
+      <stop offset="1" stop-color="#b7802b"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="16" y1="18" x2="16" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b7802b"/>
+      <stop offset="0.006" stop-color="#b7802b"/>
+      <stop offset="0.226" stop-color="#fff"/>
+      <stop offset="1" stop-color="#b7802b"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="30" y1="45" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#624312"/>
+      <stop offset="0.006" stop-color="#624312"/>
+      <stop offset="0.226" stop-color="#624312"/>
+      <stop offset="1" stop-color="#b7802b"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-5" x1="30" x2="30" xlink:href="#linear-gradient-3"/>
+    <linearGradient id="linear-gradient-6" x1="19" y1="38" x2="19" xlink:href="#linear-gradient-4"/>
+    <linearGradient id="linear-gradient-7" x1="19" x2="19" y2="11" xlink:href="#linear-gradient-3"/>
+    <linearGradient id="linear-gradient-8" x1="21" y1="41" x2="21" xlink:href="#linear-gradient-2"/>
+    <linearGradient id="linear-gradient-9" x1="21" x2="21" y2="7" xlink:href="#linear-gradient-3"/>
+  </defs>
+  <path id="Color_Fill_1" data-name="Color Fill 1" class="cls-1" d="M46,1H25L2,24,25,47H46V1Z"/>
+  <g id="Outter">
+    <path id="Base" class="cls-2" d="M26,3L4.763,24,25,45l-1,3L-0.005,24,24,0Z"/>
+    <path id="Shine" class="cls-3" d="M25,2L3,24,25,46l0,2.005L0.995,24,25-.005Z"/>
+    <path id="Shadow" class="cls-4" d="M26,45L10.764,30H5.995L25,48S25.159,47.459,26,45Z"/>
+    <path id="Light" class="cls-5" d="M26,3L10.764,18H5.995L25,0A24.663,24.663,0,0,1,26,3Z"/>
+  </g>
+  <g id="Inner">
+    <path id="Base-2" data-name="Base" class="cls-2" d="M40,3L18.763,24,39,45H35L13.995,24,38,0Z"/>
+    <path id="Shine-2" data-name="Shine" class="cls-3" d="M39,2L17,24,38,45H36L14.995,24,39-.005Z"/>
+    <path id="Shadow-2" data-name="Shadow" class="cls-6" d="M40,45L24.764,30H19.995L36,45h4Z"/>
+    <path id="Light-2" data-name="Light" class="cls-7" d="M40,3L24.764,18H19.995L39,0A24.663,24.663,0,0,1,40,3Z"/>
+  </g>
+  <g id="Inner_copy" data-name="Inner copy">
+    <path id="Base-3" data-name="Base" class="cls-2" d="M15,14L25.237,24,14,35l3,2L30.005,24,18,12Z"/>
+    <path id="Shine-3" data-name="Shine" class="cls-3" d="M15,12L27,24,15,36l1,1L29.005,24,16,11Z"/>
+    <path id="Shadow-3" data-name="Shadow" class="cls-8" d="M14,35l5.236-5h4.769L16,38S14.841,35,14,35Z"/>
+    <path id="Light-3" data-name="Light" class="cls-9" d="M14,13l5.236,5h4.769L17,11A11.8,11.8,0,0,0,14,13Z"/>
+  </g>
+  <g id="Middle">
+    <path id="Base-4" data-name="Base" class="cls-2" d="M28,7L11,24,28,41H25L7.995,24,25,7h3Z"/>
+    <path id="Shine-4" data-name="Shine" class="cls-3" d="M28,7L11,24,28,41H26L8.995,24,26,7h2Z"/>
+    <path id="Shadow-4" data-name="Shadow" class="cls-10" d="M28,41L17,30l-3.005,0L25,41h3Z"/>
+    <path id="Light-4" data-name="Light" class="cls-11" d="M28,7L17,18l-3.005,0L25,7h3Z"/>
+  </g>
+  <rect class="cls-12" x="25" width="21" height="3"/>
+  <rect id="Rectangle_1_copy" data-name="Rectangle 1 copy" class="cls-13" x="24" y="45" width="22" height="3"/>
+</svg>

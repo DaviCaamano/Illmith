@@ -1,0 +1,33 @@
+#navbar-user-widget {
+  max-width: 20vw;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  display: inline-block;
+  text-align: right;
+  height: 58px;
+}
+
+.headerTable > tbody > tr > td {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 100%;
+  position: relative;
+}
+
+.header-socials-img {
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+}
+
+.header-socials-img > path {
+  fill: lightGray;
+}
+
+.header-socials-img:hover > path {
+  fill: white;
+}
+
+#navbar-user-widget > .header-element {
+  margin: 0;
+}

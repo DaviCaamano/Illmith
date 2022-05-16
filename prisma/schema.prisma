@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id                  Int                            @default(autoincrement()) @id
+    email               String                         @unique @db.VarChar(255)
+    username            String?                        @unique @db.VarChar(32)
+    password            String                         @db.VarChar(64)
+    roleId              Int                            @default(1)
+    createdAt           DateTime                       @default(now())
+    updatedAt           DateTime                       @updatedAt
+    role                Role                           @relation(fields: [roleId], references: [id])
+    authentication      Authentication[]
+    subscription        NewsSubscription?
+    passwordReset       PendingPasswordReset?
+}
+
+model PendingUser {
+    id                  Int                            @default(autoincrement()) @id
+    email               String                         @unique @db.VarChar(320)
+    username            String?                        @unique @db.VarChar(32)
+    password            String                         @db.VarChar(64)
+    token               String                         @db.VarChar(2000)
+    expiration          DateTime
+    updatedAt           DateTime                       @updatedAt
+}
+
+model PendingPasswordReset {
+    userId              Int                            @unique @id
+    token               String                         @db.VarChar(2000)
+    expiration          DateTime
+    user                User                           @relation(fields: [userId], references: [id])
+}
+
+model Role {
+    id                  Int                            @unique @id
+    name                String                         @unique
+    User                User[]
+}
+
+model Authentication {
+    ip                  String                         @unique @id
+    token               String                         @db.VarChar(510)
+    expiration          DateTime
+    userId              Int
+    user                User                           @relation(fields: [userId], references: [id])
+    updatedAt           DateTime                       @default(now())
+}
+
+model NewsSubscription {
+    userId              Int                            @unique @id
+    user                User                           @relation(fields: [userId], references: [id])
+}
