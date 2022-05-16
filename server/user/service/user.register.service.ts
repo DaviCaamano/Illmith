@@ -31,6 +31,7 @@ export class UserRegisterService {
     private readonly logger: Logger,
     private readonly mail: UserContactService
   ) {
+    console.log('process.env', process.env);
     this.log = (...args: any) => {
       logger.log(args);
     };
