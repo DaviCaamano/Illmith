@@ -68,8 +68,9 @@ export const useUserApi = (dispatch: Dispatch): LoginProps => {
     },
   });
 
-  useSWR(ruId ? ['/users/register', { params: { token }, method: 'post' }] : null, {
+  useSWR(ruId ? ['/api/user/register', { params: { token: ruId }, method: 'get' }] : null, fetcher, {
     onSuccess: ({ data: { email, username, token, tokenExpiration } }: AxiosResponse<FinishRegistrationResp>) => {
+      alert('!');
       saveUser(email, username);
       if (tokenExpiration) {
         setLoginCookies(token, Format(new Date(tokenExpiration), TOKEN_DATE_FORMAT));

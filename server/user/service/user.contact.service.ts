@@ -30,7 +30,7 @@ const registerUserOption = (to: string | string[], token: string) => {
         </p>
         <br />
        
-        <a href="${process.env.FRONTEND_URL}/user/registraition/${token}">
+        <a href="${process.env.FRONTEND_URL}/?ruId=${token}">
             <b style="font-size: 24px">Click here to complete your account registration.</b>
         </a>`,
   };

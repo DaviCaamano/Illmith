@@ -1,16 +1,13 @@
 import axios from 'axios';
-import { errorCodes } from '@error';
+import { AxiosCatch, errorCodes, ErrorResponse } from '@error';
 import { handleInputChange } from '@utils/handleInput';
-import { EmailNotificationPrompt } from '@components/user/register/EmailNotificationPrompt';
 
 //hooks
-import { useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { useAlert } from '@hooks';
 
 //types
-import { UserScreen } from '@contexts';
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { AxiosCatch, ErrorResponse } from '@error';
+import { AlertTemplate, UserScreen } from '@contexts';
 import { Dispatch as ReduxDispatch } from '@reduxjs/toolkit';
 import { StatusCodes } from 'http-status-codes';
 import { RegistrationError } from '@utils/server';
@@ -196,7 +193,10 @@ export const useUserRegistration = (
         .then(() => {
           setForm(initialInputs);
           setModal();
-          prompt(<EmailNotificationPrompt message={'Check your email for a validation link'} />);
+          prompt({
+            template: AlertTemplate.EmailNotificationPrompt,
+            args: { message: 'Check your email for a validation link' },
+          });
         })
         .catch(
           ({

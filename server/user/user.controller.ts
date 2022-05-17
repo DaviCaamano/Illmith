@@ -1,4 +1,4 @@
-import { Controller, Logger, Req, Post, Get, Param, Render, Body } from '@nestjs/common';
+import { Controller, Logger, Req, Post, Get, Param, Body, Query } from '@nestjs/common';
 import { httpErrorHandler } from '@utils/server/logging';
 import { Throttle } from '@nestjs/throttler';
 import { loginMaxRequests, timeToLive } from '@constants/server/throttle';
@@ -13,9 +13,9 @@ import { UserService } from '@server/user/service/user.service';
 import { Request } from 'express';
 import { LogHandler } from '@interface/server/logging';
 import { ErrorHandler } from '@utils/server/logging/httpsErrorHandler';
-import { UserValidation } from '@interface/server/user';
+import { LoginResponse, UserValidation } from '@interface/server/user';
 import { userDto, registerUserDto } from '@server/user/dto/user.dto';
-import { LoginResponse } from '@server/user/service';
+
 @Controller('user')
 export class UserController {
   private readonly log: LogHandler;
@@ -80,8 +80,7 @@ export class UserController {
 
   @Throttle(loginMaxRequests, timeToLive)
   @Get('/register')
-  @Render('/user/register/[token]')
-  async finishUserRegistration(@Param() token: string) {
+  async finishUserRegistration(@Query('token') token: string) {
     return this.register.finishRegistration(token);
   }
 

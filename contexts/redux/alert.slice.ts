@@ -3,46 +3,45 @@ import { stateSetter } from '@utils/stateSetter.redux';
 
 //hooks
 import { useSelector } from 'react-redux';
+import { useCallback } from 'react';
 
 //types
 import { StateSetter } from '@utils/stateSetter.redux';
 import { RootState } from '@contexts/redux/store';
 import { ButtonInfo } from '@interface/alert/ButtonInfo';
 import { Dispatch, PayloadAction } from '@reduxjs/toolkit';
-import { useCallback } from 'react';
 
+export enum AlertTemplate {
+  none,
+  simple,
+  EmailNotificationPrompt,
+}
 export interface AlertState {
+  template: AlertTemplate;
+  args?: any;
   height: string;
   width: string;
-  visible: boolean;
   loadingVisible: boolean;
-  content: string | JSX.Element;
   buttonInfo: ButtonInfo;
 }
 
-export type AlertFunc = (
-  content: string | JSX.Element,
-  height?: string,
-  width?: string,
-  buttonText?: string | JSX.Element
-) => void;
-
-export type AlertConfirmFunc = (
-  content: string | JSX.Element,
-  confirm?: () => any,
-  cancel?: () => any,
-  height?: string,
-  width?: string,
-  confirmText?: string | JSX.Element,
-  cancelText?: string | JSX.Element
-) => void;
+interface AlertConfirmFuncProps {
+  template: AlertTemplate;
+  args?: any;
+  confirm?: () => any;
+  cancel?: () => any;
+  height?: string;
+  width?: string;
+  confirmText?: string | JSX.Element;
+  cancelText?: string | JSX.Element;
+}
+export type AlertConfirmFunc = (args: AlertConfirmFuncProps) => void;
 
 const initialState: AlertState = {
   height: '',
   width: '',
-  visible: false,
   loadingVisible: false,
-  content: '',
+  template: AlertTemplate.none,
   buttonInfo: {},
 };
 

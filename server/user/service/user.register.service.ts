@@ -12,8 +12,7 @@ import { UserContactService } from '@server/user/service/user.contact.service';
 //types
 import { LogHandler } from '@interface/server';
 import { ErrorHandler } from '@utils/server';
-import { PendingUser, Prisma, User, NewsSubscription } from '@prisma/client';
-import { SignedJWT } from '@server/shared';
+import { PendingUser, Prisma, User } from '@prisma/client';
 import { HttpStatus } from '@nestjs/common';
 import { JwtTokenUserData } from '@interface/jwt';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
@@ -31,7 +30,6 @@ export class UserRegisterService {
     private readonly logger: Logger,
     private readonly mail: UserContactService
   ) {
-    console.log('process.env', process.env);
     this.log = (...args: any) => {
       logger.log(args);
     };
@@ -52,18 +50,25 @@ export class UserRegisterService {
     if (username) username = username.toLowerCase();
     let UserEmailAlreadyUsed: User | null | undefined;
     let UserUsernameAlreadyUsed: User | null | undefined;
+    let PendingUserEmailAlreadyUsed: PendingUser | null | undefined;
+    let PendingUserUsernameAlreadyUsed: PendingUser | null | undefined;
     try {
-      [UserEmailAlreadyUsed, UserUsernameAlreadyUsed] = await Promise.all([
-        this.db.user.findFirst({ where: { email } }),
-        username ? this.db.user.findFirst({ where: { username } }) : undefined,
-      ]);
+      [UserEmailAlreadyUsed, UserUsernameAlreadyUsed, PendingUserEmailAlreadyUsed, PendingUserUsernameAlreadyUsed] =
+        await Promise.all([
+          this.db.user.findFirst({ where: { email } }),
+          username ? this.db.user.findFirst({ where: { username } }) : undefined,
+          this.db.pendingUser.findFirst({ where: { email, expiration: { gte: new Date() } } }),
+          username
+            ? this.db.pendingUser.findFirst({ where: { username, expiration: { gte: new Date() } } })
+            : undefined,
+        ]);
     } catch (err: any) {
       this.errorRequest({ general: 'Failed to perform user search' }, err);
     }
 
     validateRegisteringUser(
-      !!UserEmailAlreadyUsed,
-      !!UserUsernameAlreadyUsed,
+      !!UserEmailAlreadyUsed || !!PendingUserEmailAlreadyUsed,
+      !!UserUsernameAlreadyUsed || !!PendingUserUsernameAlreadyUsed,
       email,
       password,
       this.errorRequest,
@@ -91,6 +96,7 @@ export class UserRegisterService {
     let token: string;
     try {
       const jwt = await this.parse.signJWT(userInfo);
+
       token = jwt.token;
     } catch (err: any) {
       this.httpError({ error: 'Failed to Parse JWT Token' }, err);
@@ -114,11 +120,7 @@ export class UserRegisterService {
       token,
     };
     try {
-      await this.db.pendingUser.upsert({
-        where: { email },
-        create: { ...userData },
-        update: { username, password, expiration, token },
-      });
+      await this.db.pendingUser.create({ data: { ...userData } });
     } catch (err: any) {
       this.httpError('Failed to Create Pending User.', err);
     }
@@ -134,15 +136,19 @@ export class UserRegisterService {
     } catch (err: any) {
       this.httpError('Failed to perform pending user search', err);
     }
+
     //Link no longer valid or was never valid
     if (!pendingUser) {
       this.httpError(errorCodes.UserRegistration.userRegistrationLinkInvalid, HttpStatus.UNAUTHORIZED);
     }
+
     const { email, username } = pendingUser;
     const decoded: any = await this.parse.jwtVerify(registrationToken);
+
     if (typeof decoded?.password !== 'string' || typeof decoded.subscribe !== 'boolean') {
       this.httpError(errorCodes.UserRegistration.generic);
     }
+
     const password = await this.parse.hashPassword(decoded.password);
     const params: {
       password: string;
@@ -152,6 +158,7 @@ export class UserRegisterService {
       password,
       email,
     };
+
     if (username) params.username = username;
     const [{ id }]: [User, Prisma.BatchPayload] = await Promise.all([
       this.db.user.create({ data: params }),
@@ -162,27 +169,18 @@ export class UserRegisterService {
       username,
       userId: id,
     };
-    const promises: [Promise<SignedJWT>, Prisma.Prisma__NewsSubscriptionClient<NewsSubscription> | undefined] = [
-      this.parse.signJWT(responseData),
-      undefined,
-    ];
-
+    const { token, expiration: tokenExpiration } = this.parse.signJWT(responseData);
     if (decoded.subscribe) {
-      promises[1] = this.db.newsSubscription.create({ data: { userId: id } });
+      try {
+        this.db.newsSubscription.create({ data: { userId: id } });
+      } catch (err: any) {
+        this.httpError('Failed to setup subscription', err);
+      }
     }
-    const [
-      {
-        token,
-        decoded: { exp },
-      },
-    ]: [SignedJWT, NewsSubscription | null | undefined] = await Promise.all<
-      [Promise<SignedJWT>, Prisma.Prisma__NewsSubscriptionClient<NewsSubscription> | undefined]
-    >(promises);
-
     return {
       ...responseData,
       token,
-      tokenExpiration: exp,
+      tokenExpiration,
     };
   }
 }

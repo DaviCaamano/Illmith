@@ -1,15 +1,21 @@
 //components
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { colors } from '@colors';
+
 //types
 import { ButtonInfo } from '@interface/alert/ButtonInfo';
+import { ReactNode } from 'react';
 
 interface AlertProps {
-  content: JSX.Element | string;
-  close: () => void;
+  content: JSX.Element | JSX.Element[] | ReactNode | string | undefined;
+  closeModal: () => void;
   buttonInfo: ButtonInfo;
 }
-export const AlertBox = ({ content, close, buttonInfo: { confirm, cancel, confirmText, cancelText } }: AlertProps) => (
+export const AlertBox = ({
+  content,
+  closeModal,
+  buttonInfo: { confirm, cancel, confirmText, cancelText },
+}: AlertProps) => (
   <Flex p={'2rem'} flexDir={'column'} bg={colors.box.mainBg}>
     <Box textAlign={'center'} p={'0 0.625rem'} fontSize={'1.125rem'} flex={1}>
       {content}
@@ -21,7 +27,7 @@ export const AlertBox = ({ content, close, buttonInfo: { confirm, cancel, confir
         maxW={'10rem'}
         onClick={() => {
           if (confirm) confirm();
-          close();
+          closeModal();
         }}
       >
         {confirmText || 'Okay'}
@@ -33,7 +39,7 @@ export const AlertBox = ({ content, close, buttonInfo: { confirm, cancel, confir
           maxW={'10rem'}
           onClick={() => {
             if (cancel) cancel();
-            close();
+            closeModal();
           }}
         >
           {cancelText || 'Cancel'}

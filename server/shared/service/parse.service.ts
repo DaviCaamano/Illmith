@@ -1,3 +1,5 @@
+import fs from 'fs';
+const path = require('path');
 import bcrypt from 'bcrypt';
 import { sign as signJwt, verify as verifyJwt } from 'jsonwebtoken';
 import { httpErrorHandler } from '@utils/server/logging/httpsErrorHandler';
@@ -20,7 +22,8 @@ export class ParseService {
   private readonly log: LogHandler;
   private readonly error: LogHandler;
   private readonly httpError: ErrorHandler;
-  private readonly jwtSecret: Secret;
+  private readonly jwtPrivateKey: Secret;
+  private readonly jwtPublicKey: Secret;
   constructor(private readonly logger: Logger) {
     this.log = (...args: any) => {
       logger.log(args);
@@ -30,7 +33,8 @@ export class ParseService {
     };
     this.httpError = httpErrorHandler(this.error);
 
-    this.jwtSecret = process.env.JWT_SECRET as Secret;
+    this.jwtPrivateKey = fs.readFileSync(path.join(__dirname, '/../../../../constants/jwt/private.jwt.pem'));
+    this.jwtPublicKey = fs.readFileSync(path.join(__dirname, '/../../../../constants/jwt/public.jwt.pem'));
   }
   public hashPassword(password: string): Promise<string> {
     return new Promise(async (resolve) => {
@@ -45,25 +49,20 @@ export class ParseService {
     });
   }
 
-  signJWT(data: object): Promise<SignedJWT> {
-    return new Promise((resolve) => {
-      if (!process.env.JWT_SECRET) {
-        this.httpError('ENV NOT SET');
-      }
-      const token: string = signJwt(data, process.env.JWT_SECRET, { expiresIn: '14 days' });
-      verifyJwt(token, process.env.JWT_SECRET, (err: VerifyErrors | null, decoded: any) => {
-        if (err) {
-          this.httpError('Failed to sign token', err);
-        } else {
-          resolve({ token, decoded });
-        }
-      });
-    });
+  signJWT(data: object): JwtPayload {
+    if (!this.jwtPrivateKey) {
+      this.httpError('ENV NOT SET');
+    }
+    const token: string = signJwt(data, this.jwtPrivateKey, { expiresIn: '14 days', algorithm: 'ES256' });
+
+    const payload = verifyJwt(token, this.jwtPublicKey) as JwtPayload;
+
+    return { token, ...payload };
   }
 
   jwtVerify(token: string): Promise<unknown> {
     return new Promise((resolve) => {
-      signJwt(token, this.jwtSecret, (err, decoded: any) => {
+      verifyJwt(token, this.jwtPublicKey, (err, decoded: any) => {
         if (err) {
           this.httpError('JWT Verification Failed', err);
         } else {

@@ -16,6 +16,7 @@ import { Request } from 'express';
 import { LoginResponse, UserValidation } from '@interface/server/user';
 import { HttpStatus } from '@nestjs/common';
 import { ErrorHandler } from '@utils/server/logging/httpsErrorHandler';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class UserLoginService {
@@ -103,40 +104,39 @@ export class UserLoginService {
     admin?: boolean,
     ip?: string
   ): Promise<LoginResponse> {
-    return new Promise((resolve) => {
-      if (!ip) {
-        this.httpError(errorCodes.Login.generic);
-      }
-      const tokenInfo: { email: string; username: string | null; admin?: boolean } = {
-        email,
-        username,
-      };
-      if (admin) tokenInfo.admin = true;
+    if (!ip) {
+      this.httpError(errorCodes.Login.generic);
+    }
+    const tokenInfo: { email: string; username: string | null; admin?: boolean } = {
+      email,
+      username,
+    };
+    if (admin) tokenInfo.admin = true;
 
-      this.parse.signJWT(JSON.parse(JSON.stringify(tokenInfo))).then(({ token, decoded }: SignedJWT) => {
-        if (!decoded.exp) {
-          this.httpError(errorCodes.Login.tokenFailure);
-        }
-        const expiration = Format(new Date(decoded.exp * 1000), TOKEN_DATE_FORMAT);
-        this.db.authentication.upsert({
-          where: {
-            ip,
-          },
-          update: {
-            token,
-            expiration,
-            userId,
-          },
-          create: {
-            ip,
-            token,
-            expiration,
-            userId,
-          },
-        });
-        resolve({ token, expiration });
-      });
+    const jwtPayload: JwtPayload = this.parse.signJWT(JSON.parse(JSON.stringify(tokenInfo)));
+    const { token, expiration: tokenExpiration } = jwtPayload;
+    if (!tokenExpiration) {
+      this.httpError(errorCodes.Login.tokenFailure);
+    }
+    const expiration = Format(new Date(tokenExpiration), TOKEN_DATE_FORMAT);
+    await this.db.authentication.upsert({
+      where: {
+        ip,
+      },
+      update: {
+        token,
+        expiration,
+        userId,
+      },
+      create: {
+        ip,
+        token,
+        expiration,
+        userId,
+      },
     });
+
+    return { token, expiration };
   }
 
   async logout(ip: string) {

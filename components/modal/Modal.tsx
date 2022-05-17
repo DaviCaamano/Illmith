@@ -1,4 +1,4 @@
-import { MouseEvent, CSSProperties } from 'react';
+import { MouseEvent, CSSProperties, ReactNode } from 'react';
 
 //components
 import { AnimatePresence, motion } from 'framer-motion';
@@ -16,16 +16,15 @@ const fadeIn = {
 };
 
 interface ModalContainerProps {
-  visible: boolean;
   hide: (e?: MouseEvent) => void;
   animation?: CSSProperties;
-  children?: JSX.Element;
+  children?: JSX.Element | JSX.Element[] | string | ReactNode;
   height: string;
   width: string;
   zIndex?: number;
   id?: string;
 }
-export const Modal = ({ visible, hide, height, width, zIndex = 10000, children, id }: ModalContainerProps) => {
+export const Modal = ({ hide, height, width, zIndex = 10000, children, id }: ModalContainerProps) => {
   const variants = {
     fadeOut: { ...fadeOut, height, width },
     fadeIn: { ...fadeIn, height, width },
@@ -42,18 +41,18 @@ export const Modal = ({ visible, hide, height, width, zIndex = 10000, children, 
       top={0}
       left={0}
       zIndex={zIndex}
-      bgColor={visible ? 'rgba(0,0,0, 0.30)' : 'none'}
+      bgColor={children ? 'rgba(0,0,0, 0.30)' : 'none'}
       onClick={(e) => {
         if (hide) hide(e);
       }}
-      pointerEvents={visible ? 'all' : 'none'}
+      pointerEvents={children ? 'all' : 'none'}
     >
       <AnimatePresence>
-        {visible && (
+        {children && (
           <motion.div
             className={'modal-content-animator'}
             initial={'fadeOut'}
-            animate={visible ? 'fadeIn' : 'fadeOut'}
+            animate={children ? 'fadeIn' : 'fadeOut'}
             variants={variants}
             transition={{ duration: 0.3 }}
             exit={fadeOut}

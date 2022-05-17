@@ -14,7 +14,6 @@ export class MailService {
     });
   }
   public sendMail(options: MailerOptions) {
-    console.log('!!!!!!!!!!!!!!!!!!!!!!');
     return this.transporter.sendMail(options);
   }
 }

@@ -1,6 +1,6 @@
-import { Box, Flex } from '@chakra-ui/react';
 import MailIcon from '@icons/mail-prompt.svg';
 import { colors } from '@colors';
+import { Box, Flex } from '@chakra-ui/react';
 
 export const EmailNotificationPrompt = ({ message }: { message: string }) => (
   <Flex w={'full'} maxW={'18rem'} mb={4}>
