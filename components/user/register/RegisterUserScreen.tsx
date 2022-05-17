@@ -5,7 +5,7 @@ import { InputError } from '@components/inputError';
 import { Span } from '@components/shared';
 
 //hooks
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useUserRegistrationAnimations } from '@hooks/user/useUserRegistrationAnimations';
 
 //img
@@ -15,20 +15,26 @@ import Rejected from '@icons/reject.svg';
 import Neutral from '@icons/neutral.svg';
 
 //types
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { UserScreen } from '@contexts';
-import { RegisterUserError, RegisterUserState, useHandleAutoComplete } from '@hooks';
+import {
+  RegisterUserError,
+  RegisterUserInputHandlers,
+  RegisterUserState,
+  RegisterUserValidators,
+  useHandleAutoComplete,
+} from '@hooks';
 
 const MotionDiv = motion.div;
 
 interface RegisterUserScreenProps {
   form: RegisterUserState;
   setForm: Dispatch<SetStateAction<RegisterUserState>>;
-  handleInput: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleUserRegistrationPasswordInput: (event: ChangeEvent<HTMLInputElement> | string) => void;
   setModal: (screen?: UserScreen) => void;
   handleUserRegistration: () => void;
   screen: UserScreen;
+  inputHandlers: RegisterUserInputHandlers;
+  validators: RegisterUserValidators;
 }
 export const RegisterUserScreen = ({
   form: {
@@ -40,17 +46,18 @@ export const RegisterUserScreen = ({
     passwordValidation: { hasSixCharacters, hasCorrectCase, hasNumber },
   },
   setForm,
-  handleInput,
-  handleUserRegistrationPasswordInput,
   setModal,
   handleUserRegistration: onSubmit,
   screen,
+  inputHandlers: { handleUserRegistrationPasswordInput, handleRegistrationInput: handleInput },
+  validators: { handlePassword, handleEmail, handleUsername },
 }: RegisterUserScreenProps) => {
   const userRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const { userAnimation, passwordAnimation, userInputShown, passwordInputShown, showUserInputs, showPasswordInputs } =
     useUserRegistrationAnimations(screen);
+
   useHandleAutoComplete(
     useCallback(
       (event: Event) => {
@@ -93,6 +100,41 @@ export const RegisterUserScreen = ({
 
   const disableSubmit =
     (userInputShown && !email) || (!userInputShown && (!hasSixCharacters || !hasCorrectCase || !hasNumber));
+
+  const onSubmitClick = () => {
+    if (userInputShown) {
+      if (handleEmail() && handleUsername()) {
+        showPasswordInputs();
+      } else {
+        showUserInputs();
+      }
+    }
+    // if passwordInputShown === true
+    else {
+      if (!handleEmail() || !handleUsername()) {
+        showUserInputs();
+      } else if (handlePassword(password)) {
+        onSubmit();
+      }
+    }
+  };
+
+  useEffect(() => {
+    if ((usernameWarning || emailWarning) && passwordInputShown) {
+      showUserInputs();
+    } else if (passwordWarning && userInputShown) {
+      showPasswordInputs();
+    }
+  }, [
+    emailWarning,
+    passwordInputShown,
+    passwordWarning,
+    showPasswordInputs,
+    showUserInputs,
+    userInputShown,
+    usernameWarning,
+  ]);
+
   return (
     <Box id={'username-registration-screen'} padding={'0.9375rem 1.5625rem'} pos={'absolute'} w={'40.375rem'}>
       <Box id={'user-registration-title-positioner'} pos={'relative'} w={'full'}>
@@ -126,7 +168,6 @@ export const RegisterUserScreen = ({
                   id={'user-registration-email-input'}
                   type={'text'}
                   name={'email'}
-                  placeholder={'...'}
                   value={email}
                   onChange={handleInput}
                   ref={emailRef}
@@ -141,7 +182,6 @@ export const RegisterUserScreen = ({
                   id={'user-registration-username-input'}
                   type={'text'}
                   name={'username'}
-                  placeholder={'...'}
                   value={username}
                   onChange={handleInput}
                   ref={userRef}
@@ -181,7 +221,6 @@ export const RegisterUserScreen = ({
                   id={'user-registration-password-input'}
                   type={'password'}
                   name={'password'}
-                  placeholder={'...'}
                   value={password}
                   onChange={handleUserRegistrationPasswordInput}
                   ref={passwordRef}
@@ -277,13 +316,7 @@ export const RegisterUserScreen = ({
             variant={'prompt_light'}
             width={'full'}
             height={'3rem'}
-            onClick={() => {
-              if (userInputShown) {
-                showPasswordInputs();
-              } else {
-                onSubmit();
-              }
-            }}
+            onClick={onSubmitClick}
             disabled={disableSubmit}
           >
             {userInputShown ? 'Next' : 'Submit'}

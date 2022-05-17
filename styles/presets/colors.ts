@@ -1,5 +1,5 @@
 const textForDark = '#d3d3d3';
-const defaultText = '#ebebeb';
+const defaultText = '#141414';
 export const colors: any = {
   text: {
     title: textForDark,

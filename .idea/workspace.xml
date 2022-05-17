@@ -5,18 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f10b68f7-d714-4dad-b7d6-e9ecebf31a03" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/components/modal/alert/ModalError.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/components/modal/alert/templates/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/inputError/InputError.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/inputError/InputError.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/modal/Modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/Modal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/modal/alert/AlertBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/AlertBox.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/modal/alert/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/user/User.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/user/User.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/user/register/EmailNotificationPrompt.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/templates/EmailNotificationPrompt.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/user/register/RegisterUserScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/user/register/RegisterUserScreen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contexts/Alert.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/contexts/Alert.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contexts/redux/alert.slice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/contexts/redux/alert.slice.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/useAlert.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useAlert.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/user/useUserApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user/useUserApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/user/useUserRegistration.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user/useUserRegistration.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/shared/service/mail.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/shared/service/mail.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/shared/service/parse.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/shared/service/parse.service.ts" afterDir="false" />
@@ -24,6 +26,8 @@
       <change beforePath="$PROJECT_DIR$/server/user/service/user.login.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/service/user.login.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/user/service/user.register.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/service/user.register.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/user/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/user.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/presets/colors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/styles/presets/colors.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/presets/components/input.variant.ts" beforeDir="false" afterPath="$PROJECT_DIR$/styles/presets/components/input.variant.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +122,7 @@
       <workItem from="1652588307026" duration="3666000" />
       <workItem from="1652624569118" duration="1206000" />
       <workItem from="1652627806145" duration="5957000" />
-      <workItem from="1652651633726" duration="62240000" />
+      <workItem from="1652651633726" duration="68872000" />
     </task>
     <servers />
   </component>

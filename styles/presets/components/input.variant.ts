@@ -14,6 +14,7 @@ const inputVariant = {
           color: colors.input.modal.text,
           borderRadius: '5px',
           fontSize: '1.125rem',
+          fontWeight: 500,
           bg: colors.input.modal.bg,
           boxShadow: 'inset 0 0 1px darkgray',
 

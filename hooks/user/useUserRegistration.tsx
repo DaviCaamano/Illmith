@@ -3,7 +3,7 @@ import { AxiosCatch, errorCodes, ErrorResponse } from '@error';
 import { handleInputChange } from '@utils/handleInput';
 
 //hooks
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useAlert } from '@hooks';
 
 //types
@@ -32,6 +32,18 @@ export interface RegisterUserState {
   error: RegisterUserError;
   passwordValidation: passwordValidation;
 }
+
+export interface RegisterUserValidators {
+  handlePassword: (password: string) => { hasSixCharacters: boolean; hasCorrectCase: boolean; hasNumber: boolean };
+  handleEmail: () => boolean;
+  handleUsername: () => boolean;
+}
+
+export interface RegisterUserInputHandlers {
+  handleUserRegistrationPasswordInput: (event: ChangeEvent<HTMLInputElement> | string) => void;
+  handleRegistrationInput: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
 const initialInputs: RegisterUserState = {
   username: '',
   email: '',
@@ -55,8 +67,8 @@ export interface UserRegistrationProps {
   setForm: Dispatch<SetStateAction<RegisterUserState>>;
   setModal: (screen?: UserScreen) => any;
   handleUserRegistration: () => void;
-  handleUserRegistrationPasswordInput: (event: ChangeEvent<HTMLInputElement> | string) => void;
-  handleRegistrationInput: (event: ChangeEvent<HTMLInputElement>) => void;
+  inputHandlers: RegisterUserInputHandlers;
+  validators: RegisterUserValidators;
 }
 export const useUserRegistration = (
   ReduxDispatch: ReduxDispatch,
@@ -168,6 +180,9 @@ export const useUserRegistration = (
     }));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleRegistrationInput = useCallback(handleInputChange<RegisterUserState>(setForm), []);
+
   const handleUserRegistration = () => {
     const passwordValidated = passwordIsValidated(passwordValidation),
       emailValidated = handleEmail(),
@@ -236,7 +251,14 @@ export const useUserRegistration = (
     setForm,
     setModal,
     handleUserRegistration,
-    handleUserRegistrationPasswordInput,
-    handleRegistrationInput: handleInputChange<RegisterUserState>(setForm),
+    inputHandlers: {
+      handleUserRegistrationPasswordInput,
+      handleRegistrationInput,
+    },
+    validators: {
+      handlePassword,
+      handleEmail,
+      handleUsername,
+    },
   };
 };

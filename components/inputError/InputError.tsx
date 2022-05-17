@@ -2,7 +2,6 @@ import { CSSProperties, useState, useEffect } from 'react';
 
 //Components
 import { Box, Flex } from '@chakra-ui/react';
-import Image from 'next/image';
 import Exclamation from '@icons/exclamation-box.svg';
 
 interface InputErrorContainerProps {

@@ -3,6 +3,7 @@ import { MouseEvent, CSSProperties, ReactNode } from 'react';
 //components
 import { AnimatePresence, motion } from 'framer-motion';
 import { Box, Flex } from '@chakra-ui/react';
+import { ModalError } from '@components/modal/alert/ModalError';
 
 const fadeOut = {
   opacity: 0,
@@ -23,8 +24,9 @@ interface ModalContainerProps {
   width: string;
   zIndex?: number;
   id?: string;
+  warning?: JSX.Element | JSX.Element[] | string | ReactNode;
 }
-export const Modal = ({ hide, height, width, zIndex = 10000, children, id }: ModalContainerProps) => {
+export const Modal = ({ hide, height, width, zIndex = 10000, children, warning, id }: ModalContainerProps) => {
   const variants = {
     fadeOut: { ...fadeOut, height, width },
     fadeIn: { ...fadeIn, height, width },
@@ -59,6 +61,7 @@ export const Modal = ({ hide, height, width, zIndex = 10000, children, id }: Mod
           >
             <Box
               className="modal-container"
+              pos={'relative'}
               zIndex={zIndex + 1}
               h={'full'}
               w={'full'}
@@ -68,22 +71,28 @@ export const Modal = ({ hide, height, width, zIndex = 10000, children, id }: Mod
                 e.stopPropagation();
               }}
             >
-              <Box
-                className="modal"
-                h={'full'}
-                w={'full'}
-                pos={'relative'}
-                z-index={'101 !important'}
-                fontSize={'1.125rem'}
-                display={'block'}
-                bg={`url('/images/background/main-left.webp') left repeat-y, url('/images/background/main-right.webp') right repeat-y, white`}
-                bgSize={'20%'}
-                pointerEvents={'all'}
-                filter={'drop-shadow(0px 1px 2px rgba(0,0,0,.5))'}
-                border={'#282c34 2px solid'}
-                overflow={'hidden'}
-              >
-                {children}
+              <Box className={'modal-container-positioner'} pos={'relative'} w={'full'} h={'full'}>
+                <ModalError>
+                  {warning ||
+                    '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222'}
+                </ModalError>
+                <Box
+                  className="modal"
+                  h={'full'}
+                  w={'full'}
+                  pos={'relative'}
+                  z-index={'101 !important'}
+                  fontSize={'1.125rem'}
+                  display={'block'}
+                  bg={`url('/images/background/main-left.webp') left repeat-y, url('/images/background/main-right.webp') right repeat-y, white`}
+                  bgSize={'20%'}
+                  pointerEvents={'all'}
+                  filter={'drop-shadow(0px 1px 2px rgba(0,0,0,.5))'}
+                  border={'#282c34 2px solid'}
+                  overflow={'hidden'}
+                >
+                  {children}
+                </Box>
               </Box>
             </Box>
           </motion.div>

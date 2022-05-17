@@ -13,6 +13,7 @@ const MotionDiv = motion.div;
 //types
 import { ModalSliceHookProps, UserScreen } from '@contexts';
 import { UserRegistrationProps } from '@hooks';
+import { ModalError } from '@components/modal/alert/ModalError';
 enum ModalHeight {
   'LOGIN_USER' = '25rem',
   'register' = '25rem',
@@ -33,14 +34,14 @@ export const User = () => {
   } = useLoginForm(dispatch, modal, login, saveUser);
 
   const {
-    form: registrationInputs,
-    setForm: setRegistrationInputs,
+    form: registrationForm,
+    setForm: setRegistrationForm,
     handleUserRegistration,
-    handleRegistrationInput,
-    handleUserRegistrationPasswordInput,
+    inputHandlers: UserRegistrationInputHandlers,
+    validators: RegisterUserValidators,
   }: UserRegistrationProps = useUserRegistration(dispatch, setModal);
 
-  const { username, email, password } = registrationInputs;
+  const { username, email, password } = registrationForm;
 
   const animation = useUserModalAnimations(screen);
 
@@ -80,12 +81,12 @@ export const User = () => {
           {screen === UserScreen.register && (
             <MotionDiv key={UserScreen.register} {...animation}>
               <RegisterUserScreen
-                form={registrationInputs}
-                setForm={setRegistrationInputs}
+                form={registrationForm}
+                setForm={setRegistrationForm}
                 setModal={setModal}
                 handleUserRegistration={handleUserRegistration}
-                handleInput={handleRegistrationInput}
-                handleUserRegistrationPasswordInput={handleUserRegistrationPasswordInput}
+                inputHandlers={UserRegistrationInputHandlers}
+                validators={RegisterUserValidators}
                 screen={screen}
               />
             </MotionDiv>
