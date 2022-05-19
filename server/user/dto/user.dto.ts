@@ -8,7 +8,6 @@ export class userDto {
   identifier: string;
 
   @IsNotEmpty()
-  @Transform(lowerCaseParam)
   password: string;
 }
 

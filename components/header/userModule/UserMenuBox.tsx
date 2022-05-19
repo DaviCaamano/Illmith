@@ -1,4 +1,5 @@
 import { Text } from '@chakra-ui/react';
+import { colors } from '@colors';
 
 interface UserMenuBoxProps {
   toggleVisible: () => void;
@@ -14,6 +15,7 @@ export const UserMenuBox = ({ toggleVisible, name }: UserMenuBoxProps) => {
         overflow={'hidden'}
         text-align={'left'}
         marginTop={'0.1875rem'}
+        color={colors.text.title}
       >
         Welcome,
       </Text>
@@ -24,6 +26,7 @@ export const UserMenuBox = ({ toggleVisible, name }: UserMenuBoxProps) => {
         overflow={'hidden'}
         text-align={'left'}
         marginTop={'-0.5rem'}
+        color={colors.text.title}
       >
         &nbsp; &nbsp; {name}
       </Text>

@@ -42,8 +42,7 @@ export const useLoginForm = (
   login: (identifier: string, password: string) => Promise<JwtUserLogin>,
   saveUser: (email: string, username?: string | null, admin?: boolean) => void
 ): LoginFormProps => {
-  const [{ rememberedUser }] = useCookies<string>(['rememberedUser']);
-
+  const [{ rememberedUser }] = useCookies(['rememberedUser']);
   const { screen }: ModalState = useGetModal();
   const [form, setForm] = useState<LoginState>(initialState);
   const { user, password } = form;

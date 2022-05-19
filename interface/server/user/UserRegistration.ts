@@ -1,11 +1,3 @@
-export interface StartRegistrationResp {
-  password: string;
-  expiration: Date;
-  email: string;
-  username: string | undefined;
-  token: string;
-}
-
 export interface FinishRegistrationResp {
   email: string;
   username: string | null;
@@ -16,5 +8,5 @@ export interface FinishRegistrationResp {
 
 export interface LoginResponse {
   token: string;
-  expiration: string;
+  expiration: number | string;
 }

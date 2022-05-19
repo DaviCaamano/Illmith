@@ -2,7 +2,7 @@ import { CSSProperties, useState, useEffect } from 'react';
 
 //Components
 import { Box, Flex } from '@chakra-ui/react';
-import Exclamation from '@icons/exclamation-box.svg';
+import Exclamation from '@icons/ExclamationBox';
 
 interface InputErrorContainerProps {
   error: string | null;
@@ -73,7 +73,7 @@ export const InputError = ({ children, error, setError, style }: InputErrorConta
               mr={'0.3125rem'}
             >
               <Flex h={'full'} align={'center'} justify={'center'} mr={'0.625rem'}>
-                <Exclamation className="exclamation-svg" alt="Warning!" width={22} height={21} layout={'fixed'} />
+                <Exclamation className="exclamation-svg" alt="Warning!" width={22} height={21} />
               </Flex>
               <Box>{error}</Box>
             </Flex>

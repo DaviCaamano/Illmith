@@ -1,13 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import Format from 'date-fns/format';
 import jwtDecode from 'jwt-decode';
 import { fetcher } from '@utils/fetch';
-import { TOKEN_DATE_FORMAT } from '@constants/shared/tokenDateFormat';
-
+import { useCookies } from 'react-cookie';
 //hooks
 import useSWR from 'swr';
 import { useUser } from '@hooks';
-import { useCookies } from 'react-cookie';
 import { useRouter } from 'next/router';
 
 //types
@@ -15,18 +12,19 @@ import { UserProps } from '@hooks';
 import { JwtUserLogin } from '@interface/jwt';
 import { Dispatch } from '@reduxjs/toolkit';
 import { FinishRegistrationResp, LoginResponse } from '@interface/server/user/UserRegistration';
+import { Pages } from '@interface/shared';
+import { useRef } from 'react';
 
 export interface LoginProps extends UserProps {
   login: (identifier: string, password: string) => Promise<JwtUserLogin>;
-  validate: (token: string) => Promise<JwtUserLogin>;
 }
 export const useUserApi = (dispatch: Dispatch): LoginProps => {
   const router = useRouter();
   const { ruId, prId } = router.query;
   const user = useUser(dispatch);
   const { isLoggedIn, handleLogout, saveUser, setLoginCookies } = user;
-  const [{ token }] = useCookies(['token']);
-
+  const [cookies] = useCookies(['token']);
+  const { token } = cookies;
   const login = (identifier: string, password: string): Promise<JwtUserLogin> => {
     return axios({
       method: 'post',
@@ -38,48 +36,49 @@ export const useUserApi = (dispatch: Dispatch): LoginProps => {
     }).then(({ data: { token, expiration } }: AxiosResponse<LoginResponse>) => {
       const { email, username, admin } = jwtDecode<JwtUserLogin>(token);
       saveUser(email, username, admin);
-      setLoginCookies(token, expiration);
+      setLoginCookies(token, new Date(expiration));
       return { email, username, admin };
     });
   };
 
-  const validate = (token: string): Promise<JwtUserLogin> => {
-    return axios({
-      method: 'get',
-      url: '/api/user/authorize',
-      headers: { auth: token },
-    }).then((resp) => {
-      const data = resp.data;
-      const { email, username, admin }: any = jwtDecode(data.token);
-      saveUser(email, username, admin);
-      setLoginCookies(data.token, data.expiration);
-      return { email, username, admin };
-    });
-  };
+  const validationAttempted = useRef<boolean>(false);
+  useSWR<LoginResponse>(
+    !validationAttempted.current && token && !isLoggedIn()
+      ? ['/api/user/validate', { headers: { auth: token } }]
+      : null,
+    fetcher,
+    {
+      onSuccess: ({ token: jwt }: LoginResponse) => {
+        validationAttempted.current = true;
+        const { email, username, admin }: any = jwtDecode(jwt);
+        saveUser(email, username, admin);
+      },
+      onError: () => {
+        validationAttempted.current = true;
+        handleLogout();
+      },
+    }
+  );
 
-  useSWR<LoginResponse>(token && !isLoggedIn() ? ['/api/user/validate', { headers: { token } }] : null, fetcher, {
-    onSuccess: ({ token: jwt, expiration }: LoginResponse) => {
-      const { email, username, admin }: any = jwtDecode(jwt);
-      saveUser(email, username, admin);
-      setLoginCookies(jwt, expiration);
-    },
-    onError: () => {
-      handleLogout();
-    },
-  });
+  const registrationAttempted = useRef<boolean>(false);
+  useSWR(
+    !registrationAttempted.current && ruId ? ['/api/user/register', { params: { token: ruId }, method: 'get' }] : null,
+    fetcher,
+    {
+      onSuccess: ({ email, username, token, tokenExpiration }: FinishRegistrationResp) => {
+        registrationAttempted.current = true;
+        saveUser(email, username);
+        if (tokenExpiration) {
+          setLoginCookies(token, new Date(tokenExpiration));
+        }
+        router.push(Pages.home).then();
+      },
+      onError: () => {
+        registrationAttempted.current = true;
+        //TODO RAISE ALERT
+      },
+    }
+  );
 
-  useSWR(ruId ? ['/api/user/register', { params: { token: ruId }, method: 'get' }] : null, fetcher, {
-    onSuccess: ({ data: { email, username, token, tokenExpiration } }: AxiosResponse<FinishRegistrationResp>) => {
-      alert('!');
-      saveUser(email, username);
-      if (tokenExpiration) {
-        setLoginCookies(token, Format(new Date(tokenExpiration), TOKEN_DATE_FORMAT));
-      }
-    },
-    onError: () => {
-      //TODO RAISE ALERT
-    },
-  });
-
-  return { login, validate, ...user };
+  return { login, ...user };
 };

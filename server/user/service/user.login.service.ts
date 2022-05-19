@@ -1,9 +1,8 @@
 import bcrypt from 'bcrypt';
-import Format from 'date-fns/format';
 import { Injectable, Logger, Req } from '@nestjs/common';
 import { httpErrorHandler } from '@utils/server/logging/httpsErrorHandler';
 import { errorCodes } from '@error';
-import { ADMIN_ROLE_ID, TOKEN_DATE_FORMAT } from '@constants/shared';
+import { ADMIN_ROLE_ID } from '@constants/shared';
 
 //service
 import { PrismaService } from '@server/shared/service/prisma.service';
@@ -11,7 +10,7 @@ import { PrismaService } from '@server/shared/service/prisma.service';
 //types
 import { LogHandler } from '@interface/server/logging';
 import { Prisma } from '@prisma/client';
-import { ParseService, SignedJWT } from '@server/shared/service/parse.service';
+import { ParseService } from '@server/shared/service/parse.service';
 import { Request } from 'express';
 import { LoginResponse, UserValidation } from '@interface/server/user';
 import { HttpStatus } from '@nestjs/common';
@@ -57,9 +56,8 @@ export class UserLoginService {
   async login(identifier: string, inputPassword: string, ip: string, admin?: boolean): Promise<LoginResponse> {
     identifier = identifier.toLowerCase();
     const where: Prisma.UserWhereInput = {
-      OR: [{ email: identifier, username: identifier }],
+      OR: [{ email: identifier }, { username: identifier }],
     };
-
     let user, pendingUser;
     try {
       [user, pendingUser] = await Promise.all([
@@ -75,7 +73,7 @@ export class UserLoginService {
         }),
         this.db.pendingUser.findFirst({
           select: { email: true },
-          where: { OR: [{ email: identifier, username: identifier }] },
+          where,
         }),
       ]);
     } catch (err: any) {
@@ -112,13 +110,12 @@ export class UserLoginService {
       username,
     };
     if (admin) tokenInfo.admin = true;
-
     const jwtPayload: JwtPayload = this.parse.signJWT(JSON.parse(JSON.stringify(tokenInfo)));
-    const { token, expiration: tokenExpiration } = jwtPayload;
+    const { token, exp: tokenExpiration } = jwtPayload;
     if (!tokenExpiration) {
       this.httpError(errorCodes.Login.tokenFailure);
     }
-    const expiration = Format(new Date(tokenExpiration), TOKEN_DATE_FORMAT);
+    const expiration: Date = new Date(new Date().getTime() + tokenExpiration);
     await this.db.authentication.upsert({
       where: {
         ip,
@@ -135,8 +132,7 @@ export class UserLoginService {
         userId,
       },
     });
-
-    return { token, expiration };
+    return { token, expiration: expiration.getTime() };
   }
 
   async logout(ip: string) {

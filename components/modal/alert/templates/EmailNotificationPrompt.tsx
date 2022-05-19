@@ -9,7 +9,7 @@ export const EmailNotificationPrompt = ({ message }: { message: string }) => (
         <MailIcon />
       </Box>
     </Box>
-    <Box px={2} flex={1} color={colors.text.default}>
+    <Box px={2} flex={1} color={colors.text.defaultDark}>
       {message}
     </Box>
   </Flex>

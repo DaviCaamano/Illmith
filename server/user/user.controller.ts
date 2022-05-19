@@ -80,8 +80,8 @@ export class UserController {
 
   @Throttle(loginMaxRequests, timeToLive)
   @Get('/register')
-  async finishUserRegistration(@Query('token') token: string) {
-    return this.register.finishRegistration(token);
+  async finishUserRegistration(@Query('token') token: string, @Req() req: Request) {
+    return this.register.finishRegistration(token, req.ip);
   }
 
   @Get('/password')

@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { store } from '@contexts/redux';
+import { CookiesProvider } from 'react-cookie';
 
 //presets
 import { chakraTheme, ChakraProvider } from '@styles/chakra-theme';
@@ -24,12 +25,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" type="image/x-icon" href="/favicon.svg" />
       </Head>
       <ChakraProvider theme={chakraTheme}>
-        <Provider store={store}>
-          <Alert>
-            <Component {...pageProps} />
-          </Alert>
-          <User />
-        </Provider>
+        <CookiesProvider>
+          <Provider store={store}>
+            <Alert>
+              <Component {...pageProps} />
+            </Alert>
+            <User />
+          </Provider>
+        </CookiesProvider>
       </ChakraProvider>
     </>
   );

@@ -24,7 +24,7 @@ interface ModalContainerProps {
   width: string;
   zIndex?: number;
   id?: string;
-  warning?: JSX.Element | JSX.Element[] | string | ReactNode;
+  warning?: string;
 }
 export const Modal = ({ hide, height, width, zIndex = 10000, children, warning, id }: ModalContainerProps) => {
   const variants = {
@@ -72,10 +72,7 @@ export const Modal = ({ hide, height, width, zIndex = 10000, children, warning, 
               }}
             >
               <Box className={'modal-container-positioner'} pos={'relative'} w={'full'} h={'full'}>
-                <ModalError>
-                  {warning ||
-                    '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222'}
-                </ModalError>
+                <ModalError error={warning} />
                 <Box
                   className="modal"
                   h={'full'}

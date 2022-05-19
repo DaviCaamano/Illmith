@@ -14,7 +14,7 @@ export interface AxiosCatch<T> extends AxiosError {
 }
 export const errorCodes: Record<string, Record<string, string>> = {
   Login: {
-    generic: 'Login Error',
+    generic: 'Oops! Something went wrong on our end.',
     invalidCredential: 'Incorrect username or password',
     tooManyAttempts: 'Too many attempts, please wait before trying again',
     userFieldEmpty: 'Username is Required',
@@ -36,7 +36,8 @@ export const errorCodes: Record<string, Record<string, string>> = {
     usernameTooLong: 'Username must be less than 33 characters long',
     passwordTooLong: 'Password must be less than 64 characters long',
     emailNotValidated: 'Visit the link in the Registration email to finish registering this account',
-    userRegistrationLinkInvalid: 'This user registration link is invalid or expired',
+    userRegistrationLinkInvalid: 'This user registration link is invalid',
+    userRegistrationLinkExpired: 'This user registration link is expired',
     tooManyAttempts: 'Too many attempts, please wait before trying again',
     emailFieldEmpty: 'Email is Required',
     passwordFieldEmpty: 'Password is Required',

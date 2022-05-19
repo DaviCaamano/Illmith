@@ -16,7 +16,7 @@ import { PendingUser, Prisma, User } from '@prisma/client';
 import { HttpStatus } from '@nestjs/common';
 import { JwtTokenUserData } from '@interface/jwt';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { FinishRegistrationResp, StartRegistrationResp } from '@interface/server/user/UserRegistration';
+import { FinishRegistrationResp } from '@interface/server/user/UserRegistration';
 
 @Injectable()
 export class UserRegisterService {
@@ -45,7 +45,7 @@ export class UserRegisterService {
     password: string,
     username?: string,
     subscribe?: boolean
-  ): Promise<StartRegistrationResp> {
+  ): Promise<Prisma.PendingUserCreateInput> {
     email = email.toLowerCase();
     if (username) username = username.toLowerCase();
     let UserEmailAlreadyUsed: User | null | undefined;
@@ -63,7 +63,7 @@ export class UserRegisterService {
             : undefined,
         ]);
     } catch (err: any) {
-      this.errorRequest({ general: 'Failed to perform user search' }, err);
+      this.errorRequest('Failed to perform user search', err);
     }
 
     validateRegisteringUser(
@@ -89,7 +89,6 @@ export class UserRegisterService {
       email,
       password: hashedPassword,
       expiration: expirationString,
-      subscribe,
     };
     if (username) userInfo.username = username;
 
@@ -99,57 +98,55 @@ export class UserRegisterService {
 
       token = jwt.token;
     } catch (err: any) {
-      this.httpError({ error: 'Failed to Parse JWT Token' }, err);
+      this.httpError('Failed to Parse JWT Token', err);
     }
 
-    let error: SMTPTransport.SentMessageInfo;
-    try {
-      error = await this.mail.sendUserRegistrationEmail(email, token);
-    } catch (err: any) {
-      this.httpError('Failed to send email confirmation', err);
-    }
-
-    if (error?.rejected?.length) {
-      this.httpError({ error: 'Failed to send email confirmation' });
-    }
-    const userData: StartRegistrationResp = {
+    const userData: Prisma.PendingUserCreateInput = {
       email,
       username,
-      password,
+      password: hashedPassword,
       expiration,
       token,
+      subscribe: !!subscribe,
     };
     try {
       await this.db.pendingUser.create({ data: { ...userData } });
     } catch (err: any) {
       this.httpError('Failed to Create Pending User.', err);
     }
+
+    let error: SMTPTransport.SentMessageInfo;
+    try {
+      error = await this.mail.sendUserRegistrationEmail(email, token);
+    } catch (err: any) {
+      await this.db.pendingUser.delete({ where: { email: userData.email } });
+      this.httpError('Failed to send email confirmation', err);
+    }
+
+    if (error?.rejected?.length) {
+      this.httpError('Failed to send email confirmation');
+    }
     return userData;
   }
 
-  async finishRegistration(registrationToken: string): Promise<FinishRegistrationResp> {
+  async finishRegistration(registrationToken: string, ip: string): Promise<FinishRegistrationResp> {
     let pendingUser: PendingUser | null;
     try {
       pendingUser = await this.db.pendingUser.findFirst({
-        where: { token: registrationToken, expiration: { gte: new Date() } },
+        where: { token: registrationToken },
       });
     } catch (err: any) {
       this.httpError('Failed to perform pending user search', err);
     }
 
-    //Link no longer valid or was never valid
     if (!pendingUser) {
       this.httpError(errorCodes.UserRegistration.userRegistrationLinkInvalid, HttpStatus.UNAUTHORIZED);
     }
 
-    const { email, username } = pendingUser;
-    const decoded: any = await this.parse.jwtVerify(registrationToken);
-
-    if (typeof decoded?.password !== 'string' || typeof decoded.subscribe !== 'boolean') {
-      this.httpError(errorCodes.UserRegistration.generic);
+    if (new Date(pendingUser.expiration) < new Date()) {
+      this.httpError(errorCodes.UserRegistration.userRegistrationLinkExpired, HttpStatus.UNAUTHORIZED);
     }
-
-    const password = await this.parse.hashPassword(decoded.password);
+    const { email, username, password, subscribe } = pendingUser;
     const params: {
       password: string;
       email: string;
@@ -160,27 +157,49 @@ export class UserRegisterService {
     };
 
     if (username) params.username = username;
-    const [{ id }]: [User, Prisma.BatchPayload] = await Promise.all([
+    const [{ id }]: [User, PendingUser] = await Promise.all([
       this.db.user.create({ data: params }),
-      this.db.pendingUser.deleteMany({ where: { email } }),
+      this.db.pendingUser.delete({ where: { email } }),
     ]);
     const responseData = {
       email,
       username,
       userId: id,
     };
-    const { token, expiration: tokenExpiration } = this.parse.signJWT(responseData);
-    if (decoded.subscribe) {
+
+    const { token, exp: tokenExpiration } = this.parse.signJWT(responseData);
+    const expiration: Date | undefined = tokenExpiration ? new Date(new Date().getTime() + tokenExpiration) : undefined;
+
+    if (subscribe) {
       try {
         this.db.newsSubscription.create({ data: { userId: id } });
       } catch (err: any) {
         this.httpError('Failed to setup subscription', err);
       }
     }
+
+    if (expiration) {
+      await this.db.authentication.upsert({
+        where: {
+          ip,
+        },
+        update: {
+          token,
+          expiration,
+          userId: id,
+        },
+        create: {
+          ip,
+          token,
+          expiration,
+          userId: id,
+        },
+      });
+    }
     return {
       ...responseData,
       token,
-      tokenExpiration,
+      tokenExpiration: expiration?.getTime(),
     };
   }
 }

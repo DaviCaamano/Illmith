@@ -5,29 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f10b68f7-d714-4dad-b7d6-e9ecebf31a03" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/modal/alert/ModalError.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/modal/alert/templates/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/interface/shared/Pages.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/interface/shared/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/prisma/migrations/20220518192659_subscription_pending_user/migration.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/prisma/migrations/20220518193815_subscription_default/migration.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/shared/middleware/validateAdmin.middleware.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/shared/middleware/validatehandler.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/inputError/InputError.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/inputError/InputError.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/modal/Modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/Modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/modal/alert/AlertBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/AlertBox.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/modal/alert/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/modal/alert/ModalError.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/ModalError.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/modal/alert/templates/EmailNotificationPrompt.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/templates/EmailNotificationPrompt.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/user/User.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/user/User.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/user/register/EmailNotificationPrompt.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modal/alert/templates/EmailNotificationPrompt.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/user/register/RegisterUserScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/user/register/RegisterUserScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contexts/Alert.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/contexts/Alert.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contexts/redux/alert.slice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/contexts/redux/alert.slice.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useAlert.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useAlert.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/shared/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/shared/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/shared/tokenDateFormat.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useUserModal.animations.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useUserModal.animations.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/user/useLoginForm.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user/useLoginForm.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/user/useUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user/useUser.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/user/useUserApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user/useUserApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/user/useUserRegistration.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user/useUserRegistration.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/shared/service/mail.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/shared/service/mail.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/server/user/UserRegistration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/interface/server/user/UserRegistration.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/icons/exclamation-box.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/icons/ExclamationBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/shared/middleware/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/shared/middleware/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/shared/middleware/validateUser.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/shared/middleware/validateUser.middleware.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/shared/service/parse.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/shared/service/parse.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/user/service/user.contact.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/service/user.contact.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/shared/service/prisma.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/shared/service/prisma.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/user/dto/user.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/dto/user.dto.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/user/service/user.login.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/service/user.login.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/user/service/user.register.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/service/user.register.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/user/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/user.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/user/user.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/user/user.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles/presets/colors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/styles/presets/colors.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/presets/components/input.variant.ts" beforeDir="false" afterPath="$PROJECT_DIR$/styles/presets/components/input.variant.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/error/error.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/error/error.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,9 +85,12 @@
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="prettier.import.notification.dismissed" value="true" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\davit\WebstormProjects\illmith\node_modules\prettier" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="ts.external.directory.path" value="C:\Users\davit\WebstormProjects\illmith\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="ReaderModeSettings">
+    <option name="showLigatures" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -123,6 +139,12 @@
       <workItem from="1652624569118" duration="1206000" />
       <workItem from="1652627806145" duration="5957000" />
       <workItem from="1652651633726" duration="68872000" />
+      <workItem from="1652795747530" duration="35750000" />
+      <workItem from="1652896505988" duration="8454000" />
+      <workItem from="1652910468511" duration="2126000" />
+      <workItem from="1652930814183" duration="1185000" />
+      <workItem from="1652932026955" duration="647000" />
+      <workItem from="1652932701796" duration="7051000" />
     </task>
     <servers />
   </component>

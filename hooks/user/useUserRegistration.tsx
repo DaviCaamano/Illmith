@@ -20,9 +20,9 @@ interface passwordValidation {
 
 export interface RegisterUserError {
   warning: string;
-  emailWarning: string | null;
-  usernameWarning: string | null;
-  passwordWarning: string | null;
+  email: string | null;
+  username: string | null;
+  password: string | null;
 }
 export interface RegisterUserState {
   username: string;
@@ -51,9 +51,9 @@ const initialInputs: RegisterUserState = {
   subscribe: false,
   error: {
     warning: '',
-    emailWarning: '',
-    usernameWarning: '',
-    passwordWarning: '',
+    email: '',
+    username: '',
+    password: '',
   },
   passwordValidation: {
     hasSixCharacters: false,
@@ -74,18 +74,6 @@ export const useUserRegistration = (
   ReduxDispatch: ReduxDispatch,
   setModal: (screen?: UserScreen) => void
 ): UserRegistrationProps => {
-  /*
-  axios({
-      method: 'post',
-      url: process.env.REACT_APP_API_URL + '/users/register',
-      data: { token },
-    })
-      .then((resp) => {
-        const { token, tokenExpiration } = resp.data;
-        setLoginCookies(token, tokenExpiration);
-        router.push('/').then();
-      })*/
-
   const [form, setForm] = useState<RegisterUserState>(initialInputs);
   const { username, email, password, subscribe, passwordValidation } = form;
   const { prompt } = useAlert(ReduxDispatch);
@@ -116,7 +104,7 @@ export const useUserRegistration = (
     if (!email) {
       setForm((prevState: RegisterUserState) => ({
         ...prevState,
-        emailWarning: errorCodes.UserRegistration.emailFieldEmpty,
+        email: errorCodes.UserRegistration.emailFieldEmpty,
       }));
       return false;
     }
@@ -126,7 +114,7 @@ export const useUserRegistration = (
         ...prevState,
         error: {
           ...prevState.error,
-          emailWarning: errorCodes.UserRegistration.invalidEmail,
+          email: errorCodes.UserRegistration.invalidEmail,
         },
       }));
     }
@@ -140,7 +128,7 @@ export const useUserRegistration = (
       ...prevState,
       error: {
         ...prevState.error,
-        usernameWarning: test ? '' : errorCodes.UserRegistration.invalidUsername,
+        username: test ? '' : errorCodes.UserRegistration.invalidUsername,
       },
     }));
     return test;
@@ -152,7 +140,7 @@ export const useUserRegistration = (
         ...prevState,
         error: {
           ...prevState.error,
-          passwordWarning: errorCodes.UserRegistration.passwordFieldEmpty,
+          password: errorCodes.UserRegistration.passwordFieldEmpty,
         },
       }));
       return false;
@@ -163,7 +151,7 @@ export const useUserRegistration = (
         ...prevState,
         error: {
           ...prevState.error,
-          passwordWarning: errorCodes.UserRegistration.invalidPassword,
+          password: errorCodes.UserRegistration.invalidPassword,
         },
       }));
       return false;
@@ -171,14 +159,14 @@ export const useUserRegistration = (
     return true;
   };
 
-  const handleUserRegistrationPasswordInput = (event: ChangeEvent<HTMLInputElement> | string) => {
+  const handleUserRegistrationPasswordInput = useCallback((event: ChangeEvent<HTMLInputElement> | string) => {
     const password = typeof event === 'string' ? event : event.target.value;
     handlePassword(password);
     setForm((prevState: RegisterUserState) => ({
       ...prevState,
       password,
     }));
-  };
+  }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleRegistrationInput = useCallback(handleInputChange<RegisterUserState>(setForm), []);
@@ -193,9 +181,9 @@ export const useUserRegistration = (
         ...prevState,
         error: {
           warning: '',
-          passwordWarning: '',
-          usernameWarning: '',
-          emailWarning: '',
+          password: '',
+          username: '',
+          email: '',
         },
       }));
       axios
@@ -233,11 +221,19 @@ export const useUserRegistration = (
                 },
               }));
             } else {
+              const generalError =
+                error.warning ?? (!error.email && !error.username && !error.password) ? errorCodes.Login.generic : '';
+              const errorReport = {
+                email: error.email ?? '',
+                username: error.username ?? '',
+                password: error.password ?? '',
+                warning: generalError,
+              };
               setForm((prevState: RegisterUserState) => ({
                 ...prevState,
                 error: {
                   ...prevState.error,
-                  ...error,
+                  ...errorReport,
                 },
               }));
             }

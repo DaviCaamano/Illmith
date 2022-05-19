@@ -17,6 +17,7 @@ import { UserContactService } from '@server/user/service/user.contact.service';
 
 //middleware
 import { ValidateUserMiddleware } from '@server/shared';
+import { ValidateAdminMiddleware } from '@server/shared/middleware/validateAdmin.middleware';
 
 //types
 import { MiddlewareConsumer } from '@nestjs/common';
@@ -44,7 +45,7 @@ import { MailService } from '@server/shared';
 })
 export class UserModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ValidateUserMiddleware).forRoutes('users/validate');
-    consumer.apply(ValidateUserMiddleware).forRoutes('users/authorize');
+    consumer.apply(ValidateUserMiddleware).forRoutes('user/validate');
+    consumer.apply(ValidateAdminMiddleware).forRoutes('users/authorize');
   }
 }

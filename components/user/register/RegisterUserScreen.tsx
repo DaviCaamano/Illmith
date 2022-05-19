@@ -42,7 +42,7 @@ export const RegisterUserScreen = ({
     email,
     password,
     subscribe,
-    error: { usernameWarning, passwordWarning, emailWarning },
+    error: { username: usernameWarning, password: passwordWarning, email: emailWarning },
     passwordValidation: { hasSixCharacters, hasCorrectCase, hasNumber },
   },
   setForm,
@@ -94,9 +94,9 @@ export const RegisterUserScreen = ({
     hasNumber ? 'green' : 'black',
   ];
 
-  const setPasswordWarning = useCallback(errorSetter('passwordWarning', setForm), [setForm]); // eslint-disable-line react-hooks/exhaustive-deps
-  const setEmailWarning = useCallback(errorSetter('emailWarning', setForm), [setForm]); // eslint-disable-line react-hooks/exhaustive-deps
-  const setUsernameWarning = useCallback(errorSetter('usernameWarning', setForm), [setForm]); // eslint-disable-line react-hooks/exhaustive-deps
+  const setPasswordWarning = useCallback(errorSetter('password', setForm), [setForm]); // eslint-disable-line react-hooks/exhaustive-deps
+  const setEmailWarning = useCallback(errorSetter('email', setForm), [setForm]); // eslint-disable-line react-hooks/exhaustive-deps
+  const setUsernameWarning = useCallback(errorSetter('username', setForm), [setForm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const disableSubmit =
     (userInputShown && !email) || (!userInputShown && (!hasSixCharacters || !hasCorrectCase || !hasNumber));

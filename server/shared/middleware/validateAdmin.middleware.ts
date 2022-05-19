@@ -10,7 +10,7 @@ import { ErrorHandler } from '@utils/server/logging/httpsErrorHandler';
 import { LogHandler } from '@interface/server/logging';
 
 @Injectable()
-export class ValidateUserMiddleware implements NestMiddleware {
+export class ValidateAdminMiddleware implements NestMiddleware {
   private readonly error: LogHandler;
   private readonly httpError: ErrorHandler;
   constructor(private readonly db: PrismaService, private readonly logger: Logger) {
@@ -21,6 +21,6 @@ export class ValidateUserMiddleware implements NestMiddleware {
   }
 
   use(req: Request, res: Response, next: NextFunction, admin?: boolean) {
-    validate(req, res, next, false, this.httpError, this.db).then();
+    validate(req, res, next, true, this.httpError, this.db).then();
   }
 }

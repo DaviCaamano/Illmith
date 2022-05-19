@@ -8,12 +8,8 @@ import { Injectable, Logger } from '@nestjs/common';
 //types
 import { LogHandler } from '@interface/server/logging';
 import { ErrorHandler } from '@utils/server/logging/httpsErrorHandler';
-import { JwtPayload, Secret, VerifyErrors } from 'jsonwebtoken';
+import { JwtPayload, Secret } from 'jsonwebtoken';
 
-export interface SignedJWT {
-  decoded: JwtPayload;
-  token: string;
-}
 /**
  A class for the parsing/formatting of strings/JSON.
  */
@@ -24,6 +20,7 @@ export class ParseService {
   private readonly httpError: ErrorHandler;
   private readonly jwtPrivateKey: Secret;
   private readonly jwtPublicKey: Secret;
+  private encryptionSalt: string;
   constructor(private readonly logger: Logger) {
     this.log = (...args: any) => {
       logger.log(args);
@@ -35,11 +32,16 @@ export class ParseService {
 
     this.jwtPrivateKey = fs.readFileSync(path.join(__dirname, '/../../../../constants/jwt/private.jwt.pem'));
     this.jwtPublicKey = fs.readFileSync(path.join(__dirname, '/../../../../constants/jwt/public.jwt.pem'));
+    bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS || '10')).then((salt: string) => {
+      this.encryptionSalt = salt;
+      console.log('Salt', salt);
+    });
   }
+
+  public getSalt = () => this.encryptionSalt;
   public hashPassword(password: string): Promise<string> {
     return new Promise(async (resolve) => {
-      const salt: string = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS || '10'));
-      bcrypt.hash(password, salt, (err, hash) => {
+      bcrypt.hash(password, this.encryptionSalt, (err, hash) => {
         if (err) {
           this.httpError('Invalid Password');
         } else {

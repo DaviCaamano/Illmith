@@ -1,19 +1,29 @@
 //hooks
-import { useAlert, useLoginForm, useUserApi, useUserModalAnimations, useUserRegistration } from '@hooks';
+import {
+  LoginState,
+  RegisterUserState,
+  useAlert,
+  useLoginForm,
+  userModalErrors,
+  UserRegistrationProps,
+  useUserApi,
+  useUserModalAnimations,
+  useUserRegistration,
+} from '@hooks';
 import { useDispatch } from 'react-redux';
-import { AlertTemplate, useModalSlice } from '@contexts';
+
+//types
+import { AlertTemplate, ModalSliceHookProps, useModalSlice, UserScreen } from '@contexts';
 
 //Components
 import { LoginScreen } from '@components/user/login';
 import { Modal } from '@components/modal';
 import { RegisterUserScreen } from '@components/user/register';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Dispatch, SetStateAction } from 'react';
+
 const MotionDiv = motion.div;
 
-//types
-import { ModalSliceHookProps, UserScreen } from '@contexts';
-import { UserRegistrationProps } from '@hooks';
-import { ModalError } from '@components/modal/alert/ModalError';
 enum ModalHeight {
   'LOGIN_USER' = '25rem',
   'register' = '25rem',
@@ -41,9 +51,17 @@ export const User = () => {
     validators: RegisterUserValidators,
   }: UserRegistrationProps = useUserRegistration(dispatch, setModal);
 
-  const { username, email, password } = registrationForm;
-
-  const animation = useUserModalAnimations(screen);
+  const {
+    username,
+    email,
+    password,
+    error: { warning: registerError },
+  } = registrationForm;
+  const { error: loginError } = loginForm;
+  const [animation, warning] = useUserModalAnimations(
+    screen,
+    getUserAnimationArgs(loginError, registerError, setLoginForm, setRegistrationForm)
+  );
 
   const hide = () => {
     if (screen === UserScreen.register) {
@@ -62,8 +80,9 @@ export const User = () => {
   };
   // @ts-ignore TODO REMOVE WHEN ALL OF THE SCREEN HEIGHTS HAVE BEEN DEFINED
   const height = ModalHeight[screen] || ModalHeight.LOGIN_USER;
+
   return (
-    <Modal id={'user-modal'} hide={hide} height={height ?? '100%'} width={'44.5rem'} zIndex={9998}>
+    <Modal id={'user-modal'} hide={hide} height={height ?? '100%'} width={'44.5rem'} zIndex={9998} warning={warning}>
       {screen !== UserScreen.none && (
         <AnimatePresence>
           {screen === UserScreen.login && (
@@ -96,3 +115,22 @@ export const User = () => {
     </Modal>
   );
 };
+
+const getUserAnimationArgs = (
+  loginError: string,
+  registerError: string,
+  setLoginForm: Dispatch<SetStateAction<LoginState>>,
+  setRegistrationForm: Dispatch<SetStateAction<RegisterUserState>>
+): userModalErrors => ({
+  loginError,
+  registerError,
+  setLoginError: (error: string) => setLoginForm((prevState: LoginState) => ({ ...prevState, error })),
+  setRegisterError: (error: string) =>
+    setRegistrationForm((prevState: RegisterUserState) => ({
+      ...prevState,
+      error: {
+        ...prevState.error,
+        warning: error,
+      },
+    })),
+});

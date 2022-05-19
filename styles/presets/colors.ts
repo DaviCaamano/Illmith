@@ -5,6 +5,7 @@ export const colors: any = {
     title: textForDark,
     titleGrayed: '#d1d1d1',
     default: defaultText,
+    defaultDark: textForDark,
   },
   box: {
     header: '#20252b',

@@ -7,8 +7,9 @@ import { useUserSlice } from '@contexts/redux';
 
 //types
 import { Dispatch } from '@reduxjs/toolkit';
+import { useCallback } from 'react';
 
-export type LoginCookieFunction = (token: string, tokenExpiration: string) => void;
+export type LoginCookieFunction = (token: string, tokenExpiration: Date) => void;
 export interface UserProps extends UserState {
   saveUser: (email: string, username?: string | null, admin?: boolean) => void;
   isLoggedIn: () => boolean;
@@ -19,8 +20,7 @@ export interface UserProps extends UserState {
 
 export const useUser = (dispatch: Dispatch): UserProps => {
   const [{ username, email, admin }, setUser, logout] = useUserSlice(dispatch);
-
-  const [, setCookie, removeCookie] = useCookies(['token']);
+  const [, setCookies] = useCookies();
 
   const saveUser = (email: string, username: string | null = null, admin?: boolean) => {
     setUser({ username, email, admin });
@@ -41,18 +41,19 @@ export const useUser = (dispatch: Dispatch): UserProps => {
     logout();
   };
 
-  const setLoginCookies = (token: string, tokenExpiration: string) => {
-    //clear existing cookie
-    removeCookie('token');
-
-    const expires = new Date(tokenExpiration);
-    //replace existing cookies
-    setCookie('token', token, { expires });
-  };
+  const setLoginCookies = useCallback(
+    (token: string, expires: Date) => {
+      alert('setting cookies!' + expires);
+      setCookies('token', token, { expires, path: '/' });
+    },
+    [setCookies]
+  );
 
   const removeLoginCookies = () => {
+    //TODO DO NOT REMOVE COOKIES IF LOGOUT FUNCTION FAILS
+    //ALSO FIX LOGIN AND PROVIDE ERROR HANDLING FOR NORMAL LOGIN AND VALIDATED LOGIN
     //clear existing token cookie
-    removeCookie('token');
+    // removeCookies('token');
   };
 
   return {

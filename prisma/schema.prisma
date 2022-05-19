@@ -31,6 +31,7 @@ model PendingUser {
     password            String                         @db.VarChar(64)
     token               String                         @db.VarChar(2000)
     expiration          DateTime
+    subscribe           Boolean                        @default(false)
     updatedAt           DateTime                       @updatedAt
 }
 
