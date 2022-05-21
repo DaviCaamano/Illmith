@@ -17,7 +17,7 @@ export interface AlertHookProps {
   width: string;
   buttonInfo: ButtonInfo;
   prompt: AlertConfirmFunc;
-  template: AlertTemplate;
+  template?: AlertTemplate;
   args?: any;
   height: string;
   setAlert: Dispatch<SetStateAction<AlertState>>;
@@ -48,7 +48,7 @@ export const useAlert = (dispatch: ReduxDispatch): AlertHookProps => {
             confirmText: confirmText || prevState.buttonInfo.confirmText,
             cancelText: cancelText || prevState.buttonInfo.cancelText,
           },
-          template: template || prevState.template,
+          template: template || prevState.template || (args ? AlertTemplate.simple : AlertTemplate.none),
           args: args || prevState.args,
           height: height || prevState.height,
           width: width || prevState.width,

@@ -26,6 +26,7 @@ interface ModalContainerProps {
   id?: string;
   warning?: string;
 }
+
 export const Modal = ({ hide, height, width, zIndex = 10000, children, warning, id }: ModalContainerProps) => {
   const variants = {
     fadeOut: { ...fadeOut, height, width },

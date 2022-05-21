@@ -33,7 +33,7 @@ export const User = () => {
   const modal: ModalSliceHookProps = useModalSlice(dispatch);
   const { prompt } = useAlert(dispatch);
   const [{ screen }, setModal, closeModal] = modal;
-  const { login, saveUser } = useUserApi(dispatch);
+  const { login, saveUser } = useUserApi(dispatch, prompt);
 
   const {
     form: loginForm,

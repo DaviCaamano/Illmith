@@ -12,12 +12,14 @@ import { StateSetter } from '@utils/stateSetter.redux';
 export interface UserState {
   username: string | null;
   email: string | null;
+  onLoadFlag: boolean;
   admin?: boolean;
 }
 
 const initialState: UserState = {
   username: '',
   email: '',
+  onLoadFlag: false,
   admin: false,
 };
 

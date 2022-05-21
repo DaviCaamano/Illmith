@@ -1,39 +1,25 @@
 @import url('../public/fonts/Montserrat/Montserrat.css');
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
   font-family: 'Montserrat';
-  src: local('Montserrat'),
-    url('../public/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+  src: local('Montserrat'), url('../public/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
 }
 
-html {
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
+html{
+  background: #20252b;
+
 }
 
-html,
 body {
-  padding: 0;
-  margin: 0;
   font-family: Montserrat, serif;
-}
-
-body {
   position: relative;
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 100vh;
-  background-color: #f9f9f9;
-  width: calc(100vw - (100vw - 100%));
+  background: #19212b !important;
+  min-height: 100vh !important;
+
 }
 
 a {
@@ -41,23 +27,21 @@ a {
   text-decoration: none;
 }
 
-
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-label{
+label {
   font-size: 1.125rem;
   margin-bottom: 0;
   font-weight: 500;
-  float:left;
+  float: left;
 }
 
-
-select{
+select {
   -webkit-appearance: none;
   background-size: 12px !important;
   background: white url('../public/icons/chevron-down.svg') no-repeat right 10px bottom 40%;
   padding: 0 35px 0 18px !important;
 }
+

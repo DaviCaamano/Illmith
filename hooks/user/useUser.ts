@@ -6,24 +6,35 @@ import { useCookies } from 'react-cookie';
 import { useUserSlice } from '@contexts/redux';
 
 //types
-import { Dispatch } from '@reduxjs/toolkit';
+import { Dispatch as ReduxDispatch } from '@reduxjs/toolkit';
 import { useCallback } from 'react';
 
 export type LoginCookieFunction = (token: string, tokenExpiration: Date) => void;
 export interface UserProps extends UserState {
-  saveUser: (email: string, username?: string | null, admin?: boolean) => void;
+  saveUser: (email: string, username?: string | null, admin?: boolean, onLoadFlag?: boolean) => void;
+  setOnLoadFlag: (flag: boolean) => void;
   isLoggedIn: () => boolean;
   handleLogout: () => void;
   setLoginCookies: LoginCookieFunction;
   removeLoginCookies: () => void;
 }
 
-export const useUser = (dispatch: Dispatch): UserProps => {
-  const [{ username, email, admin }, setUser, logout] = useUserSlice(dispatch);
-  const [, setCookies] = useCookies();
-
-  const saveUser = (email: string, username: string | null = null, admin?: boolean) => {
-    setUser({ username, email, admin });
+export const useUser = (ReduxDispatch: ReduxDispatch): UserProps => {
+  const [{ username, email, admin, onLoadFlag }, setUser, logout] = useUserSlice(ReduxDispatch);
+  const [, setCookies, removeCookies] = useCookies();
+  const saveUser = (email: string, username: string | null = null, admin?: boolean, onLoadFlag?: boolean) => {
+    setUser((prevState: UserState) => ({
+      username,
+      email,
+      admin,
+      onLoadFlag: typeof onLoadFlag !== 'undefined' ? onLoadFlag : prevState.onLoadFlag,
+    }));
+  };
+  const setOnLoadFlag = (onLoadFlag: boolean) => {
+    setUser((prevState: UserState) => ({
+      ...prevState,
+      onLoadFlag,
+    }));
   };
 
   const isLoggedIn: () => boolean = () => !!email;
@@ -50,17 +61,16 @@ export const useUser = (dispatch: Dispatch): UserProps => {
   );
 
   const removeLoginCookies = () => {
-    //TODO DO NOT REMOVE COOKIES IF LOGOUT FUNCTION FAILS
-    //ALSO FIX LOGIN AND PROVIDE ERROR HANDLING FOR NORMAL LOGIN AND VALIDATED LOGIN
-    //clear existing token cookie
-    // removeCookies('token');
+    removeCookies('token');
   };
 
   return {
     username,
     email,
     admin,
+    onLoadFlag,
     saveUser,
+    setOnLoadFlag,
     isLoggedIn,
     handleLogout,
     setLoginCookies,

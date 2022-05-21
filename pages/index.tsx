@@ -4,7 +4,7 @@ import { Header } from '@components/header';
 
 const Home = () => {
   return (
-    <Box id="app" pt={'3.125rem'} w={'full'} h={'full'} minH={'100vh'} minW={'100vw'} pos={'relative'}>
+    <Box>
       <Header />
       {/*<Switch>*/}
       {/*  <Route exact path="/">*/}
@@ -15,7 +15,7 @@ const Home = () => {
         id="body"
         position={'relative'}
         width={'100%'}
-        min-height={'calc(100vh - 75px)'}
+        min-height={'100vh'}
         display={'flex'}
         padding-bottom={'75px'} /* Footer Height */
       >

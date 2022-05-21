@@ -9,6 +9,14 @@ const chakraTheme = extendTheme({
   zIndices,
   breakpoints,
   components,
+  styles: {
+    global: {
+      '#__next': {
+        height: '100%',
+        width: '100%',
+      },
+    },
+  },
 });
 
 export { chakraTheme, ChakraProvider };

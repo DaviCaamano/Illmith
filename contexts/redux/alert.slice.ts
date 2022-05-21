@@ -26,7 +26,7 @@ export interface AlertState {
 }
 
 interface AlertConfirmFuncProps {
-  template: AlertTemplate;
+  template?: AlertTemplate;
   args?: any;
   confirm?: () => any;
   cancel?: () => any;

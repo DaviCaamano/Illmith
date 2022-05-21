@@ -12,7 +12,7 @@ import { colors } from '@colors';
 export const Navbar = ({ headerItem }: { headerItem: HeaderItem[] }) => {
   const { pathname } = useRouter();
   return (
-    <Flex flex={1} justify={'center'} align={'center'} h={'full'}>
+    <Flex id={'navbar-items-container'} flex={1} justify={'center'} align={'center'} h={'full'}>
       {headerItem.map((headerItem: HeaderItem) => renderNavbarItems(headerItem, pathname))}
     </Flex>
   );

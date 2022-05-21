@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import jwtDecode from 'jwt-decode';
 import { fetcher } from '@utils/fetch';
 import { useCookies } from 'react-cookie';
+
 //hooks
 import useSWR from 'swr';
 import { useUser } from '@hooks';
@@ -14,17 +15,20 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { FinishRegistrationResp, LoginResponse } from '@interface/server/user/UserRegistration';
 import { Pages } from '@interface/shared';
 import { useRef } from 'react';
+import { AlertConfirmFunc } from '@contexts';
+import { errorCodes } from '@error';
 
 export interface LoginProps extends UserProps {
   login: (identifier: string, password: string) => Promise<JwtUserLogin>;
 }
-export const useUserApi = (dispatch: Dispatch): LoginProps => {
+export const useUserApi = (dispatch: Dispatch, prompt: AlertConfirmFunc): LoginProps => {
   const router = useRouter();
   const { ruId, prId } = router.query;
   const user = useUser(dispatch);
-  const { isLoggedIn, handleLogout, saveUser, setLoginCookies } = user;
+  const { onLoadFlag, isLoggedIn, handleLogout, saveUser, setOnLoadFlag, setLoginCookies } = user;
   const [cookies] = useCookies(['token']);
   const { token } = cookies;
+
   const login = (identifier: string, password: string): Promise<JwtUserLogin> => {
     return axios({
       method: 'post',
@@ -41,20 +45,16 @@ export const useUserApi = (dispatch: Dispatch): LoginProps => {
     });
   };
 
-  const validationAttempted = useRef<boolean>(false);
   useSWR<LoginResponse>(
-    !validationAttempted.current && token && !isLoggedIn()
-      ? ['/api/user/validate', { headers: { auth: token } }]
-      : null,
+    !onLoadFlag && token && !isLoggedIn() ? ['/api/user/validate', { headers: { auth: token } }] : null,
     fetcher,
     {
       onSuccess: ({ token: jwt }: LoginResponse) => {
-        validationAttempted.current = true;
         const { email, username, admin }: any = jwtDecode(jwt);
-        saveUser(email, username, admin);
+        saveUser(email, username, admin, true);
       },
       onError: () => {
-        validationAttempted.current = true;
+        setOnLoadFlag(true);
         handleLogout();
       },
     }
@@ -75,7 +75,7 @@ export const useUserApi = (dispatch: Dispatch): LoginProps => {
       },
       onError: () => {
         registrationAttempted.current = true;
-        //TODO RAISE ALERT
+        prompt({ args: errorCodes.UserRegistration.userRegistrationLinkInvalid });
       },
     }
   );
