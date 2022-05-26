@@ -1,4 +1,3 @@
+export * from './screens';
 export * from './User';
-export * from './login';
-export * from './register';
-export * from './password';
+export * from './PasswordInput';

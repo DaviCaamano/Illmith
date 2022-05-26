@@ -1,4 +1,4 @@
-import { MouseEvent, CSSProperties, ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 //components
 import { AnimatePresence, motion } from 'framer-motion';
@@ -17,7 +17,8 @@ const fadeIn = {
 };
 
 interface ModalContainerProps {
-  hide: (e?: MouseEvent) => void;
+  hide: () => any;
+  onBackdropClick?: () => any;
   animation?: CSSProperties;
   children?: JSX.Element | JSX.Element[] | string | ReactNode;
   height: string;
@@ -27,7 +28,16 @@ interface ModalContainerProps {
   warning?: string;
 }
 
-export const Modal = ({ hide, height, width, zIndex = 10000, children, warning, id }: ModalContainerProps) => {
+export const Modal = ({
+  hide,
+  height,
+  width,
+  zIndex = 10000,
+  children,
+  warning,
+  id,
+  onBackdropClick = () => true,
+}: ModalContainerProps) => {
   const variants = {
     fadeOut: { ...fadeOut, height, width },
     fadeIn: { ...fadeIn, height, width },
@@ -45,8 +55,10 @@ export const Modal = ({ hide, height, width, zIndex = 10000, children, warning, 
       left={0}
       zIndex={zIndex}
       bgColor={children ? 'rgba(0,0,0, 0.30)' : 'none'}
-      onClick={(e) => {
-        if (hide) hide(e);
+      onClick={() => {
+        if (onBackdropClick() && hide) {
+          hide();
+        }
       }}
       pointerEvents={children ? 'all' : 'none'}
     >

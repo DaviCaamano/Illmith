@@ -1,12 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 import jwtDecode from 'jwt-decode';
 import { fetcher } from '@utils/fetch';
-import { useCookies } from 'react-cookie';
+import { errorCodes } from '@error';
 
 //hooks
 import useSWR from 'swr';
 import { useUser } from '@hooks';
 import { useRouter } from 'next/router';
+import { useRef } from 'react';
+import { useCookies } from 'react-cookie';
 
 //types
 import { UserProps } from '@hooks';
@@ -14,16 +16,14 @@ import { JwtUserLogin } from '@interface/jwt';
 import { Dispatch } from '@reduxjs/toolkit';
 import { FinishRegistrationResp, LoginResponse } from '@interface/server/user/UserRegistration';
 import { Pages } from '@interface/shared';
-import { useRef } from 'react';
-import { AlertConfirmFunc } from '@contexts';
-import { errorCodes } from '@error';
+import { AlertConfirmFunc, AlertTemplate } from '@contexts';
+import { NextRouter } from 'next/router';
 
 export interface LoginProps extends UserProps {
   login: (identifier: string, password: string) => Promise<JwtUserLogin>;
 }
-export const useUserApi = (dispatch: Dispatch, prompt: AlertConfirmFunc): LoginProps => {
-  const router = useRouter();
-  const { ruId, prId } = router.query;
+export const useUserApi = (dispatch: Dispatch, router: NextRouter, prompt: AlertConfirmFunc): LoginProps => {
+  const { ruId } = router.query;
   const user = useUser(dispatch);
   const { onLoadFlag, isLoggedIn, handleLogout, saveUser, setOnLoadFlag, setLoginCookies } = user;
   const [cookies] = useCookies(['token']);
@@ -71,7 +71,14 @@ export const useUserApi = (dispatch: Dispatch, prompt: AlertConfirmFunc): LoginP
         if (tokenExpiration) {
           setLoginCookies(token, new Date(tokenExpiration));
         }
-        router.push(Pages.home).then();
+        router.push(Pages.home).then(() => {
+          prompt({
+            template: AlertTemplate.Welcome,
+            args: {
+              message: ['Registration successful!', 'You have been logged in.'],
+            },
+          });
+        });
       },
       onError: () => {
         registrationAttempted.current = true;

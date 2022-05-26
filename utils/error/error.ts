@@ -45,7 +45,7 @@ export const errorCodes: Record<string, Record<string, string>> = {
   ResetPassword: {
     generic: 'Error Completing Password Reset',
     emailFailed: 'Password reset emailed failed Please try again later',
-    // forgotPasswordLinkInvalid: 'This link is invalid or expired',
+    forgotPasswordLinkInvalid: 'This link is invalid or expired',
     logoutRequired: 'You must be logged out to reset your password',
   },
   //   Image: {

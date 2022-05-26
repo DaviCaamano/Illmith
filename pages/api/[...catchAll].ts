@@ -1,4 +1,4 @@
-import { Backend } from '@server/main';
+import { Backend } from '../../backend/main';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -95,7 +95,7 @@ export const useLoginForm = (
         .then(({ username, email, admin }: JwtUserLogin) => {
           if (email) {
             closeModal();
-            saveUser(username, email, admin);
+            saveUser(email, username, admin);
             setForm((prevState: LoginState) => ({ ...prevState, user: '', password: '' }));
           } else {
             setError(errorCodes.Login.generic);

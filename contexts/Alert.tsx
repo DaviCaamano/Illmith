@@ -4,11 +4,10 @@ import { useDispatch } from 'react-redux';
 
 //components
 import { AlertBox, LoadingModal, Modal } from '@components/modal';
-import { EmailNotificationPrompt } from '@components/modal';
 
 //types
-import { AlertState } from './index';
 import { ReactNode } from 'react';
+import { EmailNotificationAlert, SuccessAlert, WarningAlert, WelcomeAlert } from '@components/modal/alert/templates';
 
 export const Alert = ({ children }: { children: JSX.Element }) => {
   const dispatch = useDispatch();
@@ -20,7 +19,16 @@ export const Alert = ({ children }: { children: JSX.Element }) => {
       content = args;
       break;
     case AlertTemplate.EmailNotificationPrompt:
-      content = <EmailNotificationPrompt {...args} />;
+      content = <EmailNotificationAlert {...args} />;
+      break;
+    case AlertTemplate.success:
+      content = <SuccessAlert {...args} />;
+      break;
+    case AlertTemplate.Warning:
+      content = <WarningAlert {...args} />;
+      break;
+    case AlertTemplate.Welcome:
+      content = <WelcomeAlert {...args} />;
       break;
   }
   return (

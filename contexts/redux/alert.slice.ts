@@ -13,8 +13,11 @@ import { Dispatch, PayloadAction } from '@reduxjs/toolkit';
 
 export enum AlertTemplate {
   none,
-  simple,
   EmailNotificationPrompt,
+  simple,
+  success,
+  Warning,
+  Welcome,
 }
 export interface AlertState {
   template: AlertTemplate;

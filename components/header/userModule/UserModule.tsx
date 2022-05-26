@@ -10,24 +10,30 @@ import { Span } from '@components/shared';
 import { useUser } from '@hooks';
 import { useDispatch } from 'react-redux';
 import { useModalSlice, UserScreen } from '@contexts';
-import { useCallback, useState } from 'react';
+import { useRef, useState } from 'react';
+import { UserMenuCornerPiece } from '@components/header/userModule/UserMenuCornerPiece';
+import { useHandleOutsideClick } from '@hooks/useHandleOutsideClick';
 
 export const UserModule = () => {
   const dispatch = useDispatch();
-  const { email, username, onLoadFlag, handleLogout } = useUser(dispatch);
+  const { email, username, onLoadFlag, isLoggedIn, handleLogout } = useUser(dispatch);
   const [, setModal] = useModalSlice(dispatch);
-  const loggedIn = email || username;
+  const loggedIn = isLoggedIn();
   const name = username && username !== 'null' ? username : email ? email.split('@')[0] : null;
 
   const [hover, setHover] = useState<boolean>(false);
   const [antiHover, setAntiHover] = useState<boolean>(false);
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
-  const toggleMenu = useCallback(() => {
-    setMenuVisible((prevState) => !prevState);
-  }, [setMenuVisible]);
+
+  const MenuCornerRef = useRef<HTMLDivElement>(null);
+  const MenuRef = useRef<HTMLDivElement>(null);
+  const MenuDropdown = useRef<HTMLDivElement>(null);
+  useHandleOutsideClick(setMenuVisible, [MenuCornerRef, MenuRef, MenuDropdown]);
+
   return (
     <Box
       id={'navbar-user-widget'}
+      pos={'relative'}
       max-w={'20vw'}
       minW={'11.25rem'}
       h={'3.125rem'}
@@ -35,11 +41,7 @@ export const UserModule = () => {
       textOverflow={'ellipsis'}
       fontSize={'1.25rem'}
       textAlign={'right'}
-      opacity={onLoadFlag ? 1 : 0}
       transition={'all 0.5s'}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onClick={toggleMenu}
       cursor={'pointer'}
       boxShadow={
         hover && !antiHover
@@ -49,18 +51,35 @@ export const UserModule = () => {
             'inset 0 0 5px 20px rgba(255, 255, 255, 0.0125), inset 0 0 5px 50px rgba(255, 255, 255, 0.0125)'
       }
       borderRadius={'0 25px 0 25px'}
+      onClick={() => !loggedIn && setModal(UserScreen.login)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
     >
+      <Box
+        id={'user-menu-click-handler'}
+        w={'full'}
+        h={'full'}
+        top={0}
+        left={0}
+        pos={'absolute'}
+        onClick={() => {
+          setMenuVisible((prevState: boolean) => !prevState);
+        }}
+        ref={MenuRef}
+        zIndex={1}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      />
+      <UserMenuCornerPiece
+        hover={hover}
+        setHover={setHover}
+        setAntiHover={setAntiHover}
+        setMenuVisible={setMenuVisible}
+        MenuCornerRef={MenuCornerRef}
+      />
       {loggedIn ? (
         //If Logged in
-        <UserMenu
-          handleLogout={handleLogout}
-          name={name}
-          hover={hover && !antiHover}
-          setHover={setHover}
-          setAntiHover={setAntiHover}
-          setMenuVisible={setMenuVisible}
-          menuVisible={menuVisible}
-        />
+        <UserMenu handleLogout={handleLogout} name={name} menuVisible={menuVisible} menuDropdownRef={MenuDropdown} />
       ) : (
         //If Logged out
         <Link href={'/#'} passHref>
@@ -74,8 +93,8 @@ export const UserModule = () => {
             margin={'0 1.25rem'}
             letterSpacing={'0'}
             lineHeight={'3.5625rem'}
-            onClick={() => setModal(UserScreen.login)}
             cursor={'pointer'}
+            opacity={!email || onLoadFlag ? 1 : 0}
           >
             Login
           </Span>

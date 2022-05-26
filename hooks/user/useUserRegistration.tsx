@@ -3,7 +3,7 @@ import { AxiosCatch, errorCodes, ErrorResponse } from '@error';
 import { handleInputChange } from '@utils/handleInput';
 
 //hooks
-import { ChangeEvent, Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useAlert } from '@hooks';
 
 //types
@@ -11,12 +11,8 @@ import { AlertTemplate, UserScreen } from '@contexts';
 import { Dispatch as ReduxDispatch } from '@reduxjs/toolkit';
 import { StatusCodes } from 'http-status-codes';
 import { RegistrationError } from '@utils/server';
-
-interface passwordValidation {
-  hasSixCharacters: boolean;
-  hasCorrectCase: boolean;
-  hasNumber: boolean;
-}
+import { PasswordValidation, ValidatedPassword } from '@utils/user';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 export interface RegisterUserError {
   warning: string;
@@ -30,18 +26,17 @@ export interface RegisterUserState {
   password: string;
   subscribe: boolean;
   error: RegisterUserError;
-  passwordValidation: passwordValidation;
+  passwordValidation: PasswordValidation;
 }
 
 export interface RegisterUserValidators {
-  handlePassword: (password: string) => { hasSixCharacters: boolean; hasCorrectCase: boolean; hasNumber: boolean };
   handleEmail: () => boolean;
   handleUsername: () => boolean;
 }
 
 export interface RegisterUserInputHandlers {
-  handleUserRegistrationPasswordInput: (event: ChangeEvent<HTMLInputElement> | string) => void;
-  handleRegistrationInput: (event: ChangeEvent<HTMLInputElement>) => void;
+  handlePassword: (validatedPassword: ValidatedPassword) => void;
+  handleInput: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const initialInputs: RegisterUserState = {
@@ -77,28 +72,6 @@ export const useUserRegistration = (
   const [form, setForm] = useState<RegisterUserState>(initialInputs);
   const { username, email, password, subscribe, passwordValidation } = form;
   const { prompt } = useAlert(ReduxDispatch);
-
-  const handlePassword = (password: string) => {
-    const hasEnoughLetters = new RegExp('(?=.{6,})').test(password);
-    const hasNumber = new RegExp('(?=.*[0-9])').test(password);
-    const hasLowercase = new RegExp('(?=.*[a-z])').test(password);
-    const hasUppercase = new RegExp('(?=.*[A-Z])').test(password);
-
-    const report = {
-      hasSixCharacters: hasEnoughLetters,
-      hasCorrectCase: hasLowercase && hasUppercase,
-      hasNumber: hasNumber,
-    };
-    setForm((prevState: RegisterUserState) => ({
-      ...prevState,
-      passwordValidation: {
-        hasSixCharacters: hasEnoughLetters,
-        hasCorrectCase: hasLowercase && hasUppercase,
-        hasNumber: hasNumber,
-      },
-    }));
-    return report;
-  };
 
   const handleEmail = () => {
     if (!email) {
@@ -159,17 +132,23 @@ export const useUserRegistration = (
     return true;
   };
 
-  const handleUserRegistrationPasswordInput = useCallback((event: ChangeEvent<HTMLInputElement> | string) => {
-    const password = typeof event === 'string' ? event : event.target.value;
-    handlePassword(password);
-    setForm((prevState: RegisterUserState) => ({
-      ...prevState,
-      password,
-    }));
-  }, []);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleRegistrationInput = useCallback(handleInputChange<RegisterUserState>(setForm), []);
+  const handleInput = useCallback(handleInputChange<RegisterUserState>(setForm), []),
+    handlePassword = useCallback(({ password, hasSixCharacters, hasCorrectCase, hasNumber }: ValidatedPassword) => {
+      setForm((prevState: RegisterUserState) => ({
+        ...prevState,
+        password,
+        passwordValidation: {
+          hasSixCharacters,
+          hasCorrectCase,
+          hasNumber,
+        },
+      }));
+    }, []),
+    inputHandlers: RegisterUserInputHandlers = {
+      handleInput,
+      handlePassword,
+    };
 
   const handleUserRegistration = () => {
     const passwordValidated = passwordIsValidated(passwordValidation),
@@ -247,12 +226,8 @@ export const useUserRegistration = (
     setForm,
     setModal,
     handleUserRegistration,
-    inputHandlers: {
-      handleUserRegistrationPasswordInput,
-      handleRegistrationInput,
-    },
+    inputHandlers,
     validators: {
-      handlePassword,
       handleEmail,
       handleUsername,
     },

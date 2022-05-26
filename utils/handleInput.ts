@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, KeyboardEventHandler, KeyboardEvent, SetStateAction } from 'react';
 
 export const handleInputChange = <T>(setState: Dispatch<SetStateAction<T>>) => {
   return (event: ChangeEvent<HTMLInputElement>) => {
@@ -9,6 +9,14 @@ export const handleInputChange = <T>(setState: Dispatch<SetStateAction<T>>) => {
       ...prevState,
       [name]: value,
     }));
+  };
+};
+
+export const handleEnterPress = (callBack: Function): KeyboardEventHandler<HTMLInputElement> => {
+  return (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      callBack();
+    }
   };
 };
 

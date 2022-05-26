@@ -1,13 +1,11 @@
 import { getHeaderElements } from '@utils/header';
 import { colors } from '@colors';
 
-//images
-
 //types
 import { HeaderItem } from '@utils/header';
 
 //components
-import { Box, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { Navbar } from './navbar/Navbar';
 import { UserModule } from '@components/header';
 import { useGetUser } from '@contexts/redux';

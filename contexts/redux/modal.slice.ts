@@ -12,10 +12,10 @@ import { User } from '@prisma/client';
 
 export enum UserScreen {
   none = 'NONE',
-  login = 'LOGIN_USER',
-  register = 'REGISTER_USER',
-  password = 'PASSWORD_RESET_USER',
-  password_reset_new = 'PASSWORD_RESET_NEW',
+  login = 'LOGIN',
+  register = 'REGISTER',
+  password = 'PASSWORD_RESET',
+  new_password = 'NEW_PASSWORD',
 }
 
 export interface ModalState {

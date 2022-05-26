@@ -16,8 +16,8 @@ export const AlertBox = ({
   closeModal,
   buttonInfo: { confirm, cancel, confirmText, cancelText },
 }: AlertProps) => (
-  <Flex p={'2rem'} flexDir={'column'} bg={colors.box.mainBg}>
-    <Box textAlign={'center'} p={'0 0.625rem'} fontSize={'1.125rem'} flex={1}>
+  <Flex p={'2rem 2.625rem'} flexDir={'column'} bg={colors.box.mainBg}>
+    <Box textAlign={'center'} fontSize={'1.125rem'} flex={1} color={colors.text.defaultDark}>
       {content}
     </Box>
     <Box display={'inline-block'} textAlign={'center'} width={'100%'} pt={'1.5rem'}>

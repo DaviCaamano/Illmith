@@ -54,7 +54,6 @@ export const useUser = (ReduxDispatch: ReduxDispatch): UserProps => {
 
   const setLoginCookies = useCallback(
     (token: string, expires: Date) => {
-      alert('setting cookies!' + expires);
       setCookies('token', token, { expires, path: '/' });
     },
     [setCookies]

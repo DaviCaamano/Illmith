@@ -86,7 +86,7 @@ export const useUserModalAnimations = (
             ? setRegisterError
             : screen === UserScreen.password
             ? setPasswordError
-            : screen === UserScreen.password_reset_new
+            : screen === UserScreen.new_password
             ? setNewPasswordError
             : undefined;
         if (stateSetter) {
@@ -149,7 +149,7 @@ export const useUserModalAnimations = (
         ? registerError
         : screen === UserScreen.password
         ? passwordError
-        : screen === UserScreen.password_reset_new
+        : screen === UserScreen.new_password
         ? newPasswordError
         : undefined;
     const { error: internal } = state;
