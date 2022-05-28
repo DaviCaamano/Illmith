@@ -31,7 +31,6 @@ interface passwordValidation {
 }
 
 export type InputHandler = (event: ChangeEvent<HTMLInputElement>) => void;
-export interface PasswordInputHandler {}
 
 const initialNewPasswordState: NewPasswordState = {
   password: '',
@@ -147,10 +146,7 @@ export const useResetPassword = (
             errorMSg =
               error.warning ?? (!error.email && !error.username && !error.password) ? errorCodes.Login.generic : '';
           }
-          setResetPasswordForm({
-            email: '',
-            error: errorMSg,
-          });
+          setResetPasswordError(errorMSg);
         }
       );
   };
@@ -174,16 +170,7 @@ export const useResetPassword = (
           );
         })
         .catch(() => {
-          setNewPasswordForm((prevState: NewPasswordState) => ({
-            ...prevState,
-            error: errorCodes.ResetPassword.forgotPasswordLinkInvalid,
-          }));
-          prompt({
-            template: AlertTemplate.Warning,
-            args: {
-              message: ['This link is invalid', 'or expired'],
-            },
-          });
+          setNewPasswordError(errorCodes.ResetPassword.forgotPasswordLinkInvalid);
         });
       setNewPasswordForm(initialNewPasswordState);
     }

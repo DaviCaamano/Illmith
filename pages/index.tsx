@@ -4,7 +4,7 @@ import { Header } from '@components/header';
 
 const Home = () => {
   return (
-    <Box>
+    <Box h={'120vh'}>
       <Header />
       {/*<Switch>*/}
       {/*  <Route exact path="/">*/}

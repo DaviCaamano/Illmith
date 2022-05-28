@@ -36,7 +36,7 @@ export const UserMenu = ({ handleLogout, name, menuVisible, menuDropdownRef }: U
         <Box
           id={'user-menu-container'}
           h={'full'}
-          minW={'11.25rem'}
+          minW={['5rem', '8rem', '11.25rem']}
           w={'full'}
           pl={'1rem'}
           pr={'1.5rem'}
@@ -45,14 +45,13 @@ export const UserMenu = ({ handleLogout, name, menuVisible, menuDropdownRef }: U
           transition={'all 0.33s'}
           overflow={'hidden'}
         >
-          <Flex id="logged-in-user" justify={'start'} align={'start'} h={'full'} flexDir={'column'}>
+          <Flex id="logged-in-user" justify={'center'} align={'start'} h={'full'} flexDir={'column'} py={'0.1875rem'}>
             <Box
-              display={'block'}
+              display={['none', 'none', 'block']}
               text-overflow={'ellipsis'}
               white-space={'nowrap'}
               overflow={'hidden'}
               text-align={'left'}
-              marginTop={'0.1875rem'}
               color={'#ecdbab'}
               w={'full'}
               textAlign={'left'}
@@ -66,7 +65,6 @@ export const UserMenu = ({ handleLogout, name, menuVisible, menuDropdownRef }: U
               white-space={'nowrap'}
               overflow={'hidden'}
               text-align={'left'}
-              marginTop={'-0.5rem'}
               color={colors.text.title}
               textTransform={'capitalize'}
               w={'full'}
@@ -75,6 +73,7 @@ export const UserMenu = ({ handleLogout, name, menuVisible, menuDropdownRef }: U
               bgClip={'text'}
               textDecor={'transparent'}
               fontWeight={'medium'}
+              lineHeight={1.2}
             >
               {name}
             </Box>

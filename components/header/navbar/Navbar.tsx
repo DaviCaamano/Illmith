@@ -12,7 +12,7 @@ import { colors } from '@colors';
 export const Navbar = ({ headerItem }: { headerItem: HeaderItem[] }) => {
   const { pathname } = useRouter();
   return (
-    <Flex id={'navbar-items-container'} flex={1} justify={'center'} align={'center'} h={'full'}>
+    <Flex id={'navbar-items-container'} justify={'center'} align={'center'} h={'full'}>
       {headerItem.map((headerItem: HeaderItem) => renderNavbarItems(headerItem, pathname))}
     </Flex>
   );
@@ -27,7 +27,7 @@ const renderNavbarItems = ({ external, external_same_page, name, to }: HeaderIte
         <Text
           pos={'relative'}
           display={'inline-block'}
-          fontSize={'1.375rem'}
+          fontSize={['1rem', '1rem', '1.25rem', '1.375rem']}
           fontWeight={450}
           color={isCurrentPage ? colors.text.title : colors.text.titleGrayed}
           mx={'1.25rem'}

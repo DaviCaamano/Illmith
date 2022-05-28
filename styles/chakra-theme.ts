@@ -6,7 +6,7 @@ const chakraTheme = extendTheme({
     body: 'Montserrat, serif',
   },
   colors,
-  zIndices,
+  zIndices: { zIndices },
   breakpoints,
   components,
   styles: {

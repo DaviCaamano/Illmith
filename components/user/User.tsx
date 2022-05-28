@@ -78,7 +78,16 @@ export const User = () => {
   const { error: loginError } = loginForm;
   const [animation, warning] = useUserModalAnimations(
     screen,
-    getUserAnimationArgs(loginError, registerError, setLoginForm, setRegistrationForm)
+    getUserAnimationArgs(
+      loginError,
+      registerError,
+      resetPasswordForm.error,
+      newPasswordForm.error,
+      setLoginForm,
+      setRegistrationForm,
+      setResetPasswordError,
+      setNewPasswordError
+    )
   );
 
   const hide = () => {
@@ -158,11 +167,17 @@ export const User = () => {
 const getUserAnimationArgs = (
   loginError: string,
   registerError: string,
+  resetPasswordError: string,
+  newPasswordError: string,
   setLoginForm: Dispatch<SetStateAction<LoginState>>,
-  setRegistrationForm: Dispatch<SetStateAction<RegisterUserState>>
+  setRegistrationForm: Dispatch<SetStateAction<RegisterUserState>>,
+  setResetPasswordError: (error: string) => void,
+  setNewPasswordError: (error: string) => void
 ): userModalErrors => ({
   loginError,
   registerError,
+  resetPasswordError,
+  newPasswordError,
   setLoginError: (error: string) => setLoginForm((prevState: LoginState) => ({ ...prevState, error })),
   setRegisterError: (error: string) =>
     setRegistrationForm((prevState: RegisterUserState) => ({
@@ -172,4 +187,6 @@ const getUserAnimationArgs = (
         warning: error,
       },
     })),
+  setResetPasswordError: (error: string) => setResetPasswordError(error),
+  setNewPasswordError: (error: string) => setNewPasswordError(error),
 });

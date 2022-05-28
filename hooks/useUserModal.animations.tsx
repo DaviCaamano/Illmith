@@ -13,14 +13,14 @@ export interface Animation {
 }
 
 export interface userModalErrors {
-  loginError?: string;
-  registerError?: string;
-  passwordError?: string;
-  newPasswordError?: string;
-  setLoginError?: (x: string) => void;
-  setRegisterError?: (x: string) => void;
-  setPasswordError?: (x: string) => void;
-  setNewPasswordError?: (x: string) => void;
+  loginError: string;
+  registerError: string;
+  resetPasswordError: string;
+  newPasswordError: string;
+  setLoginError: (x: string) => void;
+  setRegisterError: (x: string) => void;
+  setResetPasswordError: (x: string) => void;
+  setNewPasswordError: (x: string) => void;
 }
 export enum SlideDirection {
   none = 'NONE',
@@ -37,11 +37,11 @@ export const useUserModalAnimations = (
   {
     loginError,
     registerError,
-    passwordError,
+    resetPasswordError,
     newPasswordError,
     setLoginError,
     setRegisterError,
-    setPasswordError,
+    setResetPasswordError,
     setNewPasswordError,
   }: userModalErrors
 ): [Animation, string | undefined] => {
@@ -85,7 +85,7 @@ export const useUserModalAnimations = (
             : screen === UserScreen.register
             ? setRegisterError
             : screen === UserScreen.password
-            ? setPasswordError
+            ? setResetPasswordError
             : screen === UserScreen.new_password
             ? setNewPasswordError
             : undefined;
@@ -94,7 +94,7 @@ export const useUserModalAnimations = (
         }
       }, TIMEOUT_DURATION);
     },
-    [screen, setLoginError, setNewPasswordError, setPasswordError, setRegisterError, state.error]
+    [screen, setLoginError, setNewPasswordError, setResetPasswordError, setRegisterError]
   );
 
   /**
@@ -121,8 +121,8 @@ export const useUserModalAnimations = (
       if (registerError && setRegisterError) {
         setRegisterError('');
       }
-      if (passwordError && setPasswordError) {
-        setPasswordError('');
+      if (resetPasswordError && setResetPasswordError) {
+        setResetPasswordError('');
       }
       if (newPasswordError && setNewPasswordError) {
         setNewPasswordError('');
@@ -132,11 +132,11 @@ export const useUserModalAnimations = (
     cancelTimeout,
     loginError,
     newPasswordError,
-    passwordError,
+    resetPasswordError,
     screen,
     setLoginError,
     setNewPasswordError,
-    setPasswordError,
+    setResetPasswordError,
     setRegisterError,
     registerError,
   ]);
@@ -148,7 +148,7 @@ export const useUserModalAnimations = (
         : screen === UserScreen.register
         ? registerError
         : screen === UserScreen.password
-        ? passwordError
+        ? resetPasswordError
         : screen === UserScreen.new_password
         ? newPasswordError
         : undefined;
@@ -166,7 +166,7 @@ export const useUserModalAnimations = (
         error: '',
       }));
     }
-  }, [cancelTimeout, loginError, newPasswordError, passwordError, screen, setNewError, state, registerError]);
+  }, [cancelTimeout, loginError, newPasswordError, resetPasswordError, screen, setNewError, state, registerError]);
   return [
     {
       initial: {
