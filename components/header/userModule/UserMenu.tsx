@@ -1,114 +1,92 @@
-import { RefObject } from 'react';
+//hooks
+import { Dispatch, SetStateAction } from 'react';
 
 //components
 import { Box, Flex } from '@chakra-ui/react';
-import { colors } from '@colors';
 
 //types
-import { UserMenuItem, UserMenuItemProps } from '@components/header';
-
-const animationTime = 1;
-interface UserMenuItems {
-  to: string;
-  onClick: (...args: any[]) => any;
-  text: string;
-}
+import { UserMenuDropdown } from '@components/header';
+import { RefObject } from 'react';
 
 interface UserMenuContainerProps {
   handleLogout: (...args: any[]) => any;
   name: string | null;
   menuVisible: boolean;
+  setMenuVisible: Dispatch<SetStateAction<boolean>>;
+  menuRef: RefObject<HTMLDivElement>;
   menuDropdownRef: RefObject<HTMLDivElement>;
 }
-
-export const UserMenu = ({ handleLogout, name, menuVisible, menuDropdownRef }: UserMenuContainerProps) => {
-  const menuItems: UserMenuItems[] = [
-    {
-      to: '#',
-      onClick: handleLogout,
-      text: 'logout',
-    },
-  ];
-
+export const UserMenu = ({
+  handleLogout,
+  name,
+  menuVisible,
+  setMenuVisible,
+  menuRef,
+  menuDropdownRef,
+}: UserMenuContainerProps) => {
   return (
-    <Flex id={'user-menu'} h={'full'} top={0} px={1}>
-      <Box w={'full'} h={'full'} pos={'relative'}>
-        <Box
-          id={'user-menu-container'}
-          h={'full'}
-          minW={['5rem', '8rem', '11.25rem']}
+    <Flex
+      id={'user'}
+      flexDir={'row-reverse'}
+      align={'center'}
+      onClick={() => setMenuVisible((prevState: boolean) => !prevState)}
+      ref={menuRef}
+    >
+      <Flex
+        w={['2.5rem', '2.5rem', '2.5rem', '4.375rem']}
+        h={['2.5rem', '2.5rem', '2.5rem', '4.375rem']}
+        bg={'linear-gradient(-45deg, #baa24f, #816f33)'}
+        textTransform={'uppercase'}
+        justify={'center'}
+        align={'center'}
+        borderRadius={'100rem'}
+        fontWeight={'bolder'}
+        boxShadow={'0 2px 3px 3px rgba(0, 0, 0, 33.33%)'}
+        p={['2px', '2px', '2px', '3px']}
+        ml={['-1em', '-1rem', '-1rem', '-2.5rem']}
+      >
+        <Flex
           w={'full'}
-          pl={'1rem'}
-          pr={'1.5rem'}
-          borderRadius={'0 1.5625rem 0 1.5625rem '}
-          cursor={'pointer'}
-          transition={'all 0.33s'}
-          overflow={'hidden'}
-        >
-          <Flex id="logged-in-user" justify={'center'} align={'start'} h={'full'} flexDir={'column'} py={'0.1875rem'}>
-            <Box
-              display={['none', 'none', 'block']}
-              text-overflow={'ellipsis'}
-              white-space={'nowrap'}
-              overflow={'hidden'}
-              text-align={'left'}
-              color={'#ecdbab'}
-              w={'full'}
-              textAlign={'left'}
-              fontSize={'1rem'}
-            >
-              Welcome,
-            </Box>
-            <Box
-              display={'block'}
-              text-overflow={'ellipsis'}
-              white-space={'nowrap'}
-              overflow={'hidden'}
-              text-align={'left'}
-              color={colors.text.title}
-              textTransform={'capitalize'}
-              w={'full'}
-              textAlign={'right'}
-              background={'-webkit-linear-gradient(#ecdbab, #c5a957), #ecdbab'}
-              bgClip={'text'}
-              textDecor={'transparent'}
-              fontWeight={'medium'}
-              lineHeight={1.2}
-            >
-              {name}
-            </Box>
-          </Flex>
-          <Box
-            id={'user-dropdown-menu'}
-            pos={'absolute'}
-            display={menuVisible ? 'block' : 'none'}
-            border={'1px black'}
-            bgColor={'#282c34'}
-            pt={'0.625rem'}
-            borderRadius={'0 0 0 50px'}
-            transform={'translateY(-0.3125rem)'}
-            boxShadow={'0px 1px 2px 2px rgba(255,255,255,10%)'}
-            width={'calc(100% - 9px)'}
-            top={'calc(100% + 8px)'}
-            left={'12px'}
-            zIndex={-10}
-            cursor={'pointer'}
-            ref={menuDropdownRef}
-            overflow={'hidden'}
+          h={'full'}
+          bg={'#20252b'}
+          justify={'center'}
+          align={'center'}
+          borderRadius={'100rem'}
+          boxShadow={'0 2px 3px 3px rgba(0, 0, 0, 33.33%)'}
+        />
+      </Flex>
+      <Box
+        w={['2.3rem', '2.3rem', '2.3rem', '3.875rem']}
+        h={['2.3rem', '2.3rem', '2.3rem', '3.875rem']}
+        bg={'linear-gradient(-45deg, #baa24f, #816f33)'}
+        borderRadius={'100rem'}
+        boxShadow={'0 2px 3px 3px rgba(0, 0, 0, 33.33%)'}
+        pos={'relative'}
+        left={menuVisible ? ['1.5rem', '1.5rem', '1.4rem', '1.575rem'] : 0}
+        transition={'left 0.66s'}
+        transitionDelay={'250ms'}
+        p={'3px'}
+      >
+        <Box id={'username-circle-outer'} bg={'#20252b'} borderRadius={'100rem'} w={'full'} h={'full'} p={'5px'}>
+          <Flex
+            id={'username-circle-inner'}
+            w={'full'}
+            h={'full'}
+            bg={'#20252b'}
+            color={'#baa24f'}
+            textTransform={'uppercase'}
+            justify={'center'}
+            align={'center'}
+            borderRadius={'100rem'}
+            fontSize={['1rem', '1rem', '1rem', '2rem']}
+            fontWeight={'bold'}
+            boxShadow={'0 2px 3px 3px rgba(0, 0, 0, 33.33%)'}
           >
-            {menuItems?.map(({ to, text, onClick }: Omit<UserMenuItemProps, 'delay' | 'visible'>, index: number) => (
-              <UserMenuItem
-                visible={menuVisible}
-                key={'user-menu-item-' + index}
-                delay={(animationTime / menuItems.length) * index}
-                to={to}
-                onClick={onClick}
-                text={text}
-              />
-            ))}
-          </Box>
+            {name?.charAt(0)}
+          </Flex>
         </Box>
       </Box>
+      <UserMenuDropdown menuDropdownRef={menuDropdownRef} menuVisible={menuVisible} handleLogout={handleLogout} />
     </Flex>
   );
 };

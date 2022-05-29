@@ -1,3 +1,4 @@
-export * from './header';
-export * from './navbar';
+export * from './Header';
+export * from './NavbarLinks';
 export * from './userModule';
+export * from './logo';
